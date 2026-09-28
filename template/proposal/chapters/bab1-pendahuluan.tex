@@ -6,21 +6,35 @@
 % Jelaskan konteks, urgensi, dan relevansi topik yang dipilih.
 % Rujuk pada penelitian terdahulu dan data sekunder jika ada.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
+Sistem informasi administrasi kesehatan berbasis web seperti openIMIS yang digunakan dalam ekosistem penjaminan kesehatan menangani proses dengan skala dan tanggung jawab finansial yang besar. Sebagai gambaran skala di Indonesia, Program Jaminan Kesehatan Nasional (JKN) yang dikelola BPJS kesehatan mencatat lebih dari 1,9 juta penggunaan layanan kesehatan per hari sepanjang tahun 2025, melalui jaringnan lebih dari 33.000 fasilitas kesehatan yang bekerja sama seperti Fasilitas Kesehatan Tingkat Pertama, Fasilitas Kesehatan Rujukan Tingkat Lanjutan, dan Fasilitas Kesehatan Penunjang \citep{kaban2026bpjs}. openIMIS sendiri adalah salah satu platform \textit{open source} yang dikembangkan untuk membantu proses administrasi klaim dan kelayakan pada skala serupa, dan menjadi bagian dari inisiatif kolaboratif seperti OpenJKN di Indonesia. Antarmuka sistem semacam ini memuat berbagai informasi yang bersifat kritis terhadap keputusan administratif dan finansial, seperti status kelayakan pesertam indikator potensi kecurangan (\textit{fraud}), dan status verifikasi klaim. Kesalahan administrator dalam mengenali atau melewatkan elemen-elemen tersebut saat berinteraksi dengan antarmuka berpoteensi menimbulkan kerugian finansial maupun penyalahgunaan layanan, namun sejauh ini belum ada mekanisme sistematis untuk memverifikasi apakah elemen-elemen kritis tersebut memang berada pada posisi yang secara alami menarik atensi visual pengguna.
 
-Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam, eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo. Nemo enim ipsam voluptatem quia voluptas sit aspernatur aut odit aut fugit, sed quia consequuntur magni dolores eos qui ratione voluptatem sequi nesciunt.
+\newline
+
+Isu ketidaksesuaian antara desain antarmuka dan kebutuhan pengguna dalam sistem informasi kesehatan bukan hal baru. Kajian terhadap implementasi OpenMRS selama 15 tahun di negara berpendapatan renadh dan menengah menemukan bahwa hambatan adopsi sistem rekam medis elektronik tidak hanya perihal infrasktruktur, melainkan juga \textit{usability} antarmuka dan rendahnya literasi teknologi informasi tenaga kesehatan, sehingga memerlukan pendekatan \textit{Human-Centered Design} \citep{verma2021openmrs}. Selain itu, kajian pada IMIA Yearbook menegaskan bahwa \textit{resilience, accesibility,} dan \textit{equity} menjadi tiga pilar utama sistem kesehatan digital, dan menyoroti upaya \textit{rebuilt} arsistektur antarmuka OpenMRS generasi baru dengan pengujain pengguna yang mencakup lintas negara \citep{paton2022open}. Kedua kajian ini menunjukan bahwa evaluasi usabilty  pada sistem informasi kesehatan penting, namun keduanya masih bertumpu pada metode evaluasi konvesional (studi lapangan, pengujian pengguna langsung) yang memerlukan sumber daya besar sehingga sulit direplikasi dalam skala kecil seperti dalam konteks penelitian tugas akhir.
+
+\newline
+
+Di sisi lain, bidang prediksi atensi visual (\textit{visual attention/gaze saliency prediction}) berbasi deep learning telah berkembang matang selama kurang lebih satu dekade, dengan sejumlah model seperti DeepGaze, UMIS, dan TranSalnNet, serta didukung oleh dataset benchmark antarmuka digital berskala besar seperti UEyes yang dipublikasikan pada ACM CHI 2023. Model-model ini memungkinkan estimasi peta atensi visual pada sebuah antarmuka tanpa memerlukan partisipan manusia di setiap sesi pengujian, berbeda dengan pendekatan berbasis rill (misalnya \textit{heatmap} berbasis klik/\textit{mouse-tracking}) yang selama ini lebih umum digunakan dalam evaluasi usabilitas. Karakteristik inilah yang menjadikan model prediksi atensi visual berpotensi sebagai instrumen diagnostik yang jauh lebih murah dan cepat dibanding studi \textit{eye-tracking} konvensional.
+
+\newline
+
+Meskipun demikian, penlusuran literatur belum menemukan studi yang menggabungkan model prediksi atensi visual dengan evaluasi antarmuka sistem informasi kesehatan administratif secara spesifik khususnya openIMIS. Kekosongan ini sesuai dengan kendala di lapangan dengan tidak tersedianya dataset \textit{eye-tracking} atau data interaksi pengguna openIMIS yang dapat dijadikan basis pelatihan atau validasi kuantitif (misalnya dengan metrik seperti NSS, CC, atau KLD), dan proses pengumpulan data tersebut secara mandiri berada di luar waktu dan kelayakan sumber daya penelitian tugas akhir tingkat sarjana.
+
+\newline
+
+Untuk mengatasi kendala tersebut, penelitian ini mengusulkan pendekatan yang tidak bergantung pada \textit{fine-tuning} berbasis data domain-spesifik. Model prediksi atensi visual \textit{pre-trained} (model saliency konvensional seperti TranSalNet/SUM maupun pendekatan \textit{zero-shot} berbasis model visual-language) digunakan langsung tanpa modifikasi bobot. Kredibilitas umum model diuji terlebih dahulu pada benchmark publik UEyes, khususnya kategori \textit{Webpage} dan \textit{Desktop UI} yang secara struktur paling mendekati antarmuka openIMIS sebagai tolak ukur independen, bukan sebagai basis pelatihan untuk domain openIMIS. Model yang sama kemudian diterapkan pada tangkapan layan openIMIS untuk menghasilkan peta atensi, yang selanjutnya dibandingkan denagn lokasi elemen kritis hasil pelabelan pakar domain, serta divalidasi lebih lanjut secara kualitatif (\textit{face validity}) bersama pakar. Topik penelitian ini memiliki relevansi kuat dengan \textit{roadmap} riset bidang \textit{Human-Computer Interaction} dan penerapan kecerdasan buatan pada sistem informasi kesehatan di Departemen Ilmu Komputer dan Elektronik FMIPA UGM, khususnya arah riset pada \textit{Software Engineering and Data Research Lab}. Riset ini diharapkan dapat memberikan metodologis maupun praktis terhadap diagnosis risiko desain antarmuka pada sistem informasi kesehatan administratif.
+
 
 \section{Rumusan Masalah}
 
 % TODO: Tulis rumusan masalah dalam bentuk pertanyaan penelitian.
 % Rumusan masalah harus spesifik, terukur, dan dapat dijawab.
 
-Berdasarkan latar belakang di atas, rumusan masalah dalam penelitian ini adalah:
-
+Berdasarkan latar belakang yang telah diuraikan, dapat dirumuskan permasalahan penelitian sebagai berikut:
 \begin{enumerate}
-  \item Bagaimana ...?
-  \item Bagaimana ...?
-  \item Bagaimana ...?
+  \item Antarmuka sistem administrasi kesehatan seperti openIMIS berisi informasi yang kritis secara operasional dan finansial, namun kesesuaian susunan informasi tersebut dengan atensi visual pengguna perlu dievaluasi secara sistematis
+  \item Model \textit{deep learning} untuk prediksi atensi telah dikembangkan secara matang pada berbagai domain antarmuka digital umum, namun adaptasi model pada domain sistem administrasi kesehatan berbais asuransi belum banyak dieksplorasi karena belum ditemukan acuan pada literatur yang tersedia
+  \item Ketidaktersediaan dataset \textit{eye-tracking} atau data interaksi pengguna yang spesifik pada domain openIMIS menjadi kendala untuk validasi kuantitatif standar (NSS/CC/KLD) untuk model prediksi atensi visual, sehingga memerlukan metodologi alternatif yang kredibel tanpa memerlukan fine-tuning berbasis data domain.
 \end{enumerate}
 
 \section{Batasan Masalah}
@@ -28,12 +42,16 @@ Berdasarkan latar belakang di atas, rumusan masalah dalam penelitian ini adalah:
 % TODO: Tulis batasan masalah untuk memfokuskan penelitian.
 % Batasan dapat mencakup ruang lingkup, teknologi, atau aspek yang tidak diteliti.
 
-Agar penelitian ini tetap fokus dan terukur, batasan masalah yang ditetapkan adalah:
+Untuk menjaga fokus dan kelayakan penelitian dalam lingkup tugas akhir, ditetapkan batasan sebagai berikut:
 
 \begin{enumerate}
-  \item Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  \item Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  \item Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+  \item Objek studi dibatasi pada antarmuka sistem openIMIS versi \textit{sandbox}/demo, bukan lingkungan produksi aktif
+  \item Model prediksi atensi visual yang digunakan adalah model \textit{pre-trained open-source} (mis. TranSalNet, SUM) dan/atau model visual-language secara zero-shot, tanpa \textit{fine-tuning} tambahan menggunakan data domain openIMIS
+  \item Validasi akurasi umum model dilakukan dengan publik UEyes, khusus kategori \textit{Webpage} dan \textit{Desktop UI}, sebagai ukuran kredibilitas umum dan bukan sebagai metrik akurasi domain spesifik openIMIS
+  \item Definisi "elemen kritis" pada antarmuka openIMIS ditentukan melalui sesi pelabelan bersama 1-2 pakar domain, bukan melalui studi lapangan berskala besar.
+  \item Deliverable perangkat lunak dibatasi pada aplikasi web dengan satu fitur inti: unggah tangkapan layar openIMIS lalu prediksi dan visualisasi peta atensi secara otomatis. Pengembangan backend/infrastruktur openIMIS itu sendiri berada di luar cakupan penelitian.
+  \item Penelitian tidak mencakup siklus \textit{redesign} penuh terhadap antarmuka openIMIS, keluaran penelitian adalah diagnosis kesenjangan atensi dan rekomendasi, bukan implementasi ulang desain.
+  \item Validasi kuantitat skala kecil dengan partisipan proksi (5-10 orang) merupakan opsi penguat apabila logistik memungkinkan, bukan komponen wajib penelitian.
 \end{enumerate}
 
 \section{Tujuan Penelitian}
@@ -41,34 +59,26 @@ Agar penelitian ini tetap fokus dan terukur, batasan masalah yang ditetapkan ada
 % TODO: Tulis tujuan penelitian yang ingin dicapai.
 % Tujuan harus sesuai dengan rumusan masalah.
 
-Tujuan dari penelitian ini adalah:
+Berdasarkan rumusan masalah dan batasan yang telah diidentifikasi, tujuan penelitian ini adalah:
 
 \begin{enumerate}
-  \item Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  \item Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-  \item Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
+  \item Membangun alat diagnostik berbasi model prediksi atensi visual pra-latih untuk antarmuka openIMIS tanpa memerlukan \textit{fine-tuning} berbasis data domain spesifik.
+  \item Mengukur kredibilitas umum model prediksi atensi visual yang dipilih melalui benchmark publik UEyes pada kategori \textit{Webpage} dan \textit{Desktop UI}
+  \item Menganalisis kesesuaian antara zona atensi visual hasil prediksi model dengan lokasi elemen kritis pada antarmuka openIMIS berdasarkan pelabelan pakar domain.
+  \item Memvalidasi temuan kesenjangan atensi melalui sesi tinjauan kualitatif (\textit{face validity}) bersama pakar domain openIMIS.
 \end{enumerate}
+
 
 \section{Manfaat Penelitian}
 
 % TODO: Tulis manfaat penelitian bagi akademik dan praktis.
 
-Penelitian ini diharapkan memberikan manfaat berikut:
+Penelitian ini diharapkan memberikan manfaat sebagai berikut:
 
 \begin{enumerate}
-  \item \textbf{Teoritis:} Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-  \item \textbf{Praktis:} Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
+  \item \textbf{Bagi akademik:} memberikan kontribusi metodologis awal pada irisan bidang prediksi atensi visual dan desain antarmuka sistem informasi kesehatan administratif
+  \item \textbf{Bagi pengembang/pengelola openIMIS:} menyediakan alat diagnostik yang cepat dan murah untuk mengevaluasi risiko desain antarmuka, tanpa memerlukan pengumpulan data \textit{eye-tracking}yang mahal dan memakan waktu.
+  \item \textbf{Bagi ekosistem OpenJKN/BPJS-K:}Menjadi dasar awal bagi kajian usability lanjutan yang lebih besar dan berbasis data domain-spesifik di penelitian selanjutnya.
+  \item \textbf{Bagi peneliti selanjutnya:} memberikan \textit{baseline} metodologi (validasi \textit{benchmark} umum dan expert judgment tanpa \textit{fine-tuning}) yang berpotensi direplikasi pada domain sistem informasi lain dengan keterbatsan data serupa. 
 \end{enumerate}
 
-\section{Sistematika Penulisan}
-
-% TODO: Sesuaikan sistematika penulisan dengan struktur penelitian Anda.
-
-Sistematika penulisan proposal tugas akhir ini adalah sebagai berikut:
-
-\begin{itemize}
-  \item \textbf{Bab I:} Pendahuluan --- berisi latar belakang, rumusan masalah, batasan masalah, tujuan, manfaat, dan sistematika penulisan.
-  \item \textbf{Bab II:} Penelitian Terkait --- membahas state of the art dan hasil-hasil penelitian sebelumnya yang relevan.
-  \item \textbf{Bab III:} Metode dan Rancangan Penelitian --- menjelaskan metodologi, perancangan sistem, bagan alir, dan tahapan implementasi.
-  \item \textbf{Bab IV:} Jadwal Penelitian --- memuat Gantt Chart berbasis bulan untuk perencanaan waktu penelitian.
-\end{itemize}

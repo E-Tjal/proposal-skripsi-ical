@@ -233,7 +233,7 @@
       \vspace{1.0cm}
       \MakeUppercase{\normalfont\slshape\bfseries\@titleeng}\par\nobreak
        \vfill
-       \includegraphics{logougm}
+       \includegraphics[width=5cm]{logougm}
        \vfill
        {\normalfont
         \MakeUppercase{\@fullname}\\
@@ -277,7 +277,7 @@
         {\normalfont Usulan Penelitian}\\
        \fi
        \vfill
-       \includegraphics{logougm}
+       \includegraphics[width=5cm]{logougm}
        \vfill
        {\normalfont
         \MakeUppercase{\@fullname}\\

@@ -48,13 +48,13 @@ build-docker:
 	docker build -t $(DOCKER_IMAGE):$(DOCKER_TAG) -f docker/Dockerfile .
 
 proposal-docker: build-docker
-	docker run --rm -v $(PWD)/template:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) sh -c "cd /workspace/proposal && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex"
+	docker run --rm -v $(CURDIR)/template:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) sh -c "cd /workspace/proposal && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex"
 
 skripsi-docker: build-docker
-	docker run --rm -v $(PWD)/template:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) sh -c "cd /workspace/skripsi && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex"
+	docker run --rm -v $(CURDIR)/template:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) sh -c "cd /workspace/skripsi && pdflatex -interaction=nonstopmode main.tex && bibtex main && pdflatex -interaction=nonstopmode main.tex && pdflatex -interaction=nonstopmode main.tex"
 
 shell: build-docker
-	docker run --rm -it -v $(PWD)/template:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) sh
+	docker run --rm -it -v $(CURDIR)/template:/workspace $(DOCKER_IMAGE):$(DOCKER_TAG) sh
 
 # Compile all
 all: proposal skripsi

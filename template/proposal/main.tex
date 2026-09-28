@@ -8,15 +8,15 @@
 % Metadata Proposal
 %------------------------------------------------------------
 % TODO: Ganti metadata di bawah ini dengan data Anda sendiri
-\titleind{JUDUL BAHASA INDONESIA}
-\titleeng{JUDUL BAHASA INGGRIS}
-\fullname{NAMA LENGKAP}
-\idnum{NIM}
+\titleind{ANALISIS ATENSI VISUAL PADA ANTARMUKA OPENIMIS MENGGUNAKAN MODEL SALIENCY PREDICTION}
+\titleeng{VISUAL ATTENTION ANALYSIS ON OPENIMIS INTERFACE USING SALIENCY PREDICTION MODEL}
+\fullname{KHAIRUMAYZAL DWIKSANENDRA}
+\idnum{23/513946/PA/21969}
 \degree{JENJANG}
 \gelar{GELAR}
-\yearsubmit{TAHUN}
-\program{PROGRAM STUDI}
-\dept{DEPARTEMEN}
+\yearsubmit{2026}
+\program{ILMU KOMPUTER}
+\dept{DEPARTEMEN ILMU KOMPUTER DAN ELEKTRONIKA}
 \firstsupervisor{NAMA DOSEN PEMBIMBING}
 \firstexaminer{NAMA DOSEN PENGUJI 1}
 \secondexaminer{NAMA DOSEN PENGUJI 2}
@@ -90,7 +90,12 @@
 % TODO: Tulis intisari dalam Bahasa Indonesia di sini (150-250 kata).
 % Jelaskan latar belakang, tujuan, metode, dan hasil penelitian.
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Antarmuka sistem administrasi kesehatan berbasis web seperti openIMIS berisi elemen informasi yang kritis secara operasional dan finansial, seperti status kelayakan peserta, indikator potensi penipuan, dan status klaim, namun tidak ada jaminan bahwa elemen-elemen tersebut secara alami menarik atensi visual pengguna saat berinteraksi dengan antarmuka. Riset di bidang human-computer interaction menunjukkan bahwa hambatan adopsi sistem informasi kesehatan tidak semata soal infrastruktur, melainkan juga usability antarmuka \citep{verma2021openmrs,paton2022open}. Meskipun model deep learning untuk prediksi atensi visual (saliency) pada antarmuka digital telah berkembang matang lebih dari satu dekade, penerapannya secara spesifik pada antarmuka sistem administrasi kesehatan seperti openIMIS belum ditemukan pada literatur yang tersedia. Penelitian ini bertujuan mengembangkan sebuah alat diagnostik berbasis model prediksi atensi visual pra-latih, tanpa fine-tuning menggunakan data domain, untuk mengevaluasi kesesuaian antara zona atensi visual prediktif dengan lokasi elemen kritis pada antarmuka openIMIS. Akurasi umum model diuji lebih dahulu pada benchmark publik UEyes, khususnya kategori Webpage dan Desktop UI, sebagai ukuran kredibilitas umum. Model kemudian diterapkan pada tangkapan layar openIMIS untuk menghasilkan peta atensi, yang dibandingkan dengan elemen kritis hasil pelabelan pakar domain, lalu divalidasi lebih lanjut melalui sesi tinjauan kualitatif bersama pakar. Alat yang dihasilkan berupa aplikasi web sederhana yang menerima unggahan tangkapan layar dan menghasilkan visualisasi peta atensi secara otomatis. Penelitian ini diharapkan memberikan kontribusi metodologis awal dalam mendiagnosis risiko desain antarmuka sistem administrasi kesehatan tanpa memerlukan data eye-tracking domain-spesifik yang mahal untuk dikumpulkan.
+\\
+
+\noindent \textbf{Kata Kunci:} 
+\newline 
+Visual Attention Prediction, Saliency, Human-Computer Interaction, openIMIS, Deep Learning, Zero-Shot Learning, Health Information Systems, UEyes
 \endabstractind
 
 \abstracteng
@@ -111,6 +116,7 @@ Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor i
 %------------------------------------------------------------
 % Bibliography
 %------------------------------------------------------------
+\nocite{*}
 \bibliography{references}
 
 \end{document}
