@@ -10,63 +10,44 @@
   doi       = {10.1145/3379337.3415825}
 }
 
-@inproceedings{hosseini2025sum,
-  author = {Hosseini, Alireza and Kazerouni, Amirhossein and Akhavan, Saeed and Brudno, Michael and Taati, Babak},
-  year = {2024},
-  month = {06},
-  pages = {},
-  title = {SUM: Saliency Unification through Mamba for Visual Attention Modeling},
-  doi = {10.48550/arXiv.2406.17815}
+@article{hosseini2025sum,
+  author  = {Hosseini, Alireza and Kazerouni, Amirhossein and Akhavan, Saeed and Brudno, Michael and Taati, Babak},
+  year    = {2024},
+  month   = {06},
+  title   = {SUM: Saliency Unification through Mamba for Visual Attention Modeling},
+  journal = {arXiv preprint arXiv:2406.17815},
+  doi     = {10.48550/arXiv.2406.17815}
 }
 
 @inproceedings{jiang2023ueyes,
-  author = {Jiang, Yue and Leiva, Luis A. and Rezazadegan Tavakoli, Hamed and R. B. Houssel, Paul and Kylm{\"a}l{\"a}, Julia and Oulasvirta, Antti},
-  title = {UEyes: Understanding Visual Saliency across User Interface Types},
-  year = {2023},
-  isbn = {9781450394215},
+  author    = {Jiang, Yue and Leiva, Luis A. and Rezazadegan Tavakoli, Hamed and R. B. Houssel, Paul and Kylm{\"a}l{\"a}, Julia and Oulasvirta, Antti},
+  title     = {UEyes: Understanding Visual Saliency across User Interface Types},
+  year      = {2023},
   publisher = {Association for Computing Machinery},
-  address = {New York, NY, USA},
-  url = {https://doi.org/10.1145/3544548.3581096},
-  doi = {10.1145/3544548.3581096},
-  abstract = {While user interfaces (UIs) display elements such as images and text in a grid-based layout, UI types differ significantly in the number of elements and how they are displayed. For example, webpage designs rely heavily on images and text, whereas desktop UIs tend to feature numerous small images. To examine how such differences affect the way users look at UIs, we collected and analyzed a large eye-tracking-based dataset, UEyes (62 participants and 1,980 UI screenshots), covering four major UI types: webpage, desktop UI, mobile UI, and poster. We analyze its differences in biases related to such factors as color, location, and gaze direction. We also compare state-of-the-art predictive models and propose improvements for better capturing typical tendencies across UI types. Both the dataset and the models are publicly available.},
+  address   = {New York, NY, USA},
+  doi       = {10.1145/3544548.3581096},
   booktitle = {Proceedings of the 2023 CHI Conference on Human Factors in Computing Systems},
-  articleno = {285},
-  numpages = {21},
-  keywords = {Computer Vision, Deep Learning, Eye Tracking, Human Perception and Cognition, Interaction Design},
-  location = {Hamburg, Germany},
-  series = {CHI '23}
+  series    = {CHI '23}
 }
 
 @inproceedings{linardos2021deepgaze,
-  @INPROCEEDINGS {9711473,
-  author = { Linardos, Akis and Kummerer, Matthias and Press, Ori and Bethge, Matthias },
-  booktitle = { 2021 IEEE/CVF International Conference on Computer Vision (ICCV) },
-  title = {{ DeepGaze IIE: Calibrated prediction in and out-of-domain for state-of-the-art saliency modeling }},
-  year = {2021},
-  volume = {},
-  ISSN = {},
-  pages = {12899-12908},
-  abstract = { Since 2014 transfer learning has become the key driver for the improvement of spatial saliency prediction—however, with stagnant progress in the last 3-5 years. We conduct a large-scale transfer learning study which tests different ImageNet backbones, always using the same read out architecture and learning protocol adopted from DeepGaze II. By replacing the VGG19 backbone of DeepGaze II with ResNet50 features we improve the performance on saliency prediction from 78% to 85%. However, as we continue to test better ImageNet models as backbones—such as EfficientNetB5—we observe no additional improvement on saliency prediction. By analyzing the backbones further, we find that generalization to other datasets differs substantially, with models being consistently overconfident in their fixation predictions. We show that by combining multiple backbones in a principled manner a good confidence calibration on unseen datasets can be achieved. This new model "DeepGaze IIE" yields a significant leap in benchmark performance in and out-of-domain with a 15 percent point improvement over DeepGaze II to 93% on MIT1003, marking a new state of the art on the MIT/Tuebingen Saliency Benchmark in all available metrics (AUC: 88.3%, sAUC: 79.4%, CC: 82.4%). },
-  keywords = {Measurement;Computer vision;Protocols;Computational modeling;Transfer learning;Computer architecture;Predictive models},
-  doi = {10.1109/ICCV48922.2021.01268},
-  url = {https://doi.ieeecomputersociety.org/10.1109/ICCV48922.2021.01268},
-  publisher = {IEEE Computer Society},
-  address = {Los Alamitos, CA, USA},
-  month =Oct}
-
+  author    = {Linardos, Akis and K{\"u}mmerer, Matthias and Press, Ori and Bethge, Matthias},
+  title     = {DeepGaze IIE: Calibrated Prediction in and Out-of-Domain for State-of-the-Art Saliency Modeling},
+  booktitle = {Proceedings of the IEEE/CVF International Conference on Computer Vision (ICCV)},
+  pages     = {12899--12908},
+  year      = {2021},
+  doi       = {10.1109/ICCV48922.2021.01268}
 }
 
 @article{lou2022transalnet,
-  title = {TranSalNet: Towards perceptually relevant visual saliency prediction},
-journal = {Neurocomputing},
-volume = {494},
-pages = {455-467},
-year = {2022},
-issn = {0925-2312},
-doi = {https://doi.org/10.1016/j.neucom.2022.04.080},
-url = {https://www.sciencedirect.com/science/article/pii/S0925231222004714},
-author = {Jianxun Lou and Hanhe Lin and David Marshall and Dietmar Saupe and Hantao Liu},
-keywords = {Saliency prediction, Deep learning, Transformer, Convolutional neural network},
+  title   = {TranSalNet: Towards perceptually relevant visual saliency prediction},
+  journal = {Neurocomputing},
+  volume  = {494},
+  pages   = {455--467},
+  year    = {2022},
+  issn    = {0925-2312},
+  doi     = {10.1016/j.neucom.2022.04.080},
+  author  = {Jianxun Lou and Hanhe Lin and David Marshall and Dietmar Saupe and Hantao Liu}
 }
 
 @article{paton2022open,
@@ -100,6 +81,36 @@ keywords = {Saliency prediction, Deep learning, Transformer, Convolutional neura
   url          = {https://www.antaranews.com/berita/5631944/bpjs-kesehatan-sebanyak-9862-persen-penduduk-ri-terlindungi-jkn},
   note         = {Diakses: 7 September 2026}
 }
-% TODO: Tambahkan referensi sesuai kebutuhan penelitian Anda.
-% Gunakan format BibTeX standar: book, article, inproceedings, misc, dll.
-% Pastikan setiap \citep{} atau \citet{} di dokumen memiliki entri yang sesuai di sini.
+
+@article{itti1998model,
+  author    = {Itti, Laurent and Koch, Christof and Niebur, Ernst},
+  title     = {A Model of Saliency-Based Visual Attention for Rapid Scene Analysis},
+  journal   = {IEEE Transactions on Pattern Analysis and Machine Intelligence},
+  volume    = {20},
+  number    = {11},
+  pages     = {1254--1259},
+  year      = {1998},
+  publisher = {IEEE},
+  doi       = {10.1109/34.730558}
+}
+
+@inproceedings{selvaraju2017grad,
+  author    = {Selvaraju, Ramprasaath R. and Cogswell, Michael and Das, Abhishek and Vedantam, Ramakrishna and Parikh, Devi and Batra, Dhruv},
+  title     = {Grad-CAM: Visual Explanations from Deep Networks via Gradient-Based Localization},
+  booktitle = {Proceedings of the IEEE International Conference on Computer Vision (ICCV)},
+  pages     = {618--626},
+  year      = {2017},
+  address   = {Venice, Italy},
+  doi       = {10.1109/ICCV.2017.74}
+}
+
+@ARTICLE{bylinskii2019what,
+  author={Bylinskii, Zoya and Judd, Tilke and Oliva, Aude and Torralba, Antonio and Durand, Frédo},
+  journal={IEEE Transactions on Pattern Analysis and Machine Intelligence}, 
+  title={What Do Different Evaluation Metrics Tell Us About Saliency Models?}, 
+  year={2019},
+  volume={41},
+  number={3},
+  pages={740-757},
+  keywords={Measurement;Computational modeling;Analytical models;Visualization;Benchmark testing;Observers;Task analysis;Saliency models;evaluation metrics;benchmarks;fixation maps;saliency applications},
+  doi={10.1109/TPAMI.2018.2815601}}
