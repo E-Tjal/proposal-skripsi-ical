@@ -1,81 +1,431 @@
 \chapter{METODE DAN RANCANGAN PENELITIAN}
 
-\section{Deskripsi Umum Penelitian}
 
-% TODO: Jelaskan gambaran besar penelitian yang akan dilakukan.
+\section{Deskripsi Umum}
+\label{sec:deskripsi-umum}
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur.
+Penelitian ini merupakan skripsi ilmiah akademik dengan target penelitian berupa analisis model prediksi atensi visual pra-latih pada objek studi antarmuka openIMIS, disertai pengembangan aplikasi web sederhana dengan satu fitur inti. Penelitian tidak melibatkan pelatihan maupun \emph{fine-tuning} model. Seluruh komputasi dilakukan pada laptop pribadi dengan GPU NVIDIA RTX 3060 Laptop (VRAM 6~GB), sedangkan data antarmuka diambil dari server demo resmi openIMIS (\texttt{demo.\allowbreak openimis.\allowbreak org}).
+% CATATAN: keberadaan aplikasi web menunggu jawaban Pak Lukman (Pertanyaan 1 bahan bimbingan).
 
-\section{Metodologi}
+Penelitian terdiri atas sembilan tahap yang digambarkan pada Gambar~\ref{fig:bagan-alir}. Penomoran tahap menunjukkan kelompok kegiatan, bukan urutan ketat: pengambilan \emph{screenshot} dan kotak elemen DOM untuk layar alur pilot (Tahap~5) dilakukan sebelum pilot pelabelan (Tahap~2), karena daftar elemen DOM menjadi satuan pelabelan. Tahap \emph{benchmark} pada UEyes berjalan paralel dengan tahap pelabelan dan pengambilan data openIMIS, dan hasilnya diperlukan sebelum hasil analisis pada openIMIS ditafsirkan.
 
-% TODO: Jelaskan metode penelitian yang digunakan.
-% Contoh: Research and Development (R&D), Eksperimental, Studi Kasus, dll.
+\begin{figure}[H]
+  \centering
+  \includegraphics[width=\textwidth,height=0.85\textheight,keepaspectratio]{figures/bagan-alir}
+  \caption{Bagan alir penelitian (hijau: telah dilaksanakan; kuning: akan dikerjakan)}
+  \label{fig:bagan-alir}
+\end{figure}
 
-Tahapan penelitian dilakukan secara sistematis sebagai berikut:
+Gambar 3.1 menunjukkan urutan dan ketergantungan antartahap. Secara garis besar, tahapan terbagi menjadi empat kelompok: penyiapan data dan pelabelan (Tahap 1, 2, 3, dan 5), pengukuran kredibilitas model pada UEyes (Tahap 4), prediksi dan analisis pada antarmuka openIMIS (Tahap 6 dan 7), serta penyusunan luaran (Tahap 8 dan 9). Tahap 7 dipecah menjadi tiga langkah berurutan, yaitu pemeriksaan kelayakan uji, perhitungan skor, dan uji permutasi beserta analisis lanjutannya, karena mode analisis harus ditetapkan sebelum skor dihitung. Keluaran setiap tahap beserta indikator capaiannya yang terukur dirinci pada Tabel 3.1, dan indikator tersebut menjadi acuan untuk menilai keberhasilan setiap tahap.
 
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
+\caption{Tahapan penelitian, keluaran, dan indikator capaian}
+\label{tab:tahapan}\\
+\hline
+\textbf{Tahap} & \textbf{Keluaran} & \textbf{Indikator capaian (terukur)} \\
+\hline
+\endfirsthead
+\multicolumn{3}{l}{\emph{Tabel~\ref{tab:tahapan} (lanjutan)}}\\
+\hline
+\textbf{Tahap} & \textbf{Keluaran} & \textbf{Indikator capaian (terukur)} \\
+\hline
+\endhead
+\hline
+\endfoot
+1. Studi sumber dan kriteria pemilihan layar/alur & Daftar sumber dan kriteria pemilihan & Setiap sumber tercatat lengkap (URL, tanggal terbit, tanggal akses, ciri versi antarmuka) \\
+\hline
+2. Pilot pelabelan & Buku kode mini dan evaluasi pilot & Setiap kriteria evaluasi pilot dinilai terhadap ambang pada Tabel~\ref{tab:evaluasi-pilot} dan keputusannya didokumentasikan; $\kappa$, $p_o$, PA, daftar elemen yang berubah label, dan kesepakatan per kriteria dilaporkan \\
+\hline
+3. Pelabelan penuh & Buku kode final dan tabel label elemen & Setiap elemen berlabel memiliki minimal dua sumber berbeda yang tercatat; label final seluruh elemen tersedia beserta versi buku kode yang dipakai \\
+\hline
+4. \emph{Benchmark} UEyes & Nilai CC, NSS, KLD per kategori dan \emph{baseline} & Ketiga metrik dilaporkan (rerata dan simpangan baku) per kategori desktop dan web bersama \emph{baseline} peta posisi rata-rata manusia (\emph{leave-one-out}) dan \emph{center-bias} (tiga nilai $\sigma$) pada gambar yang sama, disertai rerata selisih per gambar dan proporsi gambar tempat model unggul; gambar dengan skor ekstrem diperiksa \\
+\hline
+5. Pengambilan data openIMIS & Pasangan \emph{screenshot} dan berkas kotak elemen beserta metadata & Setiap \emph{screenshot} berpasangan dengan berkas kotak dan metadata (tanggal akses, ukuran \emph{viewport}, keadaan layar) \\
+\hline
+6. Prediksi atensi & Peta atensi & Peta dihasilkan untuk seluruh \emph{screenshot} dengan prapemrosesan identik dengan \emph{benchmark} \\
+\hline
+7. Kelayakan uji, skor, dan analisis & Laporan kelayakan uji, skor, persentil, nilai-p permutasi, hasil analisis sensitivitas (melalui skrip analisis) & Laporan kelayakan uji (jumlah kelompok informatif, total susunan, nilai-p minimum) disusun sebelum skor dihitung; persentil seluruh elemen berlabel dan sebaran per elemen dilaporkan, beserta jumlah elemen berlabel dan $T$ per layar; nilai-p eksak dilaporkan terhadap $\alpha = 0{,}05$ bila syarat kelayakan terpenuhi; luas kotak elemen berlabel dan pembanding dilaporkan per layar (median dan rasio); hasil analisis sensitivitas dengan pembanding A dan status ketahanan kesimpulan dilaporkan; hasil pemilahan peran posisi dan lembar telaah kualitatif untuk seluruh elemen terpilih tersedia \\
+\hline
+8. Aplikasi web & Aplikasi web unggah \emph{screenshot} dengan tampilan peta atensi & Peta atensi dari aplikasi sama dengan peta dari skrip inferensi pada seluruh \emph{screenshot} uji (toleransi numerik \textbf{[ditetapkan]}) \\
+\hline
+9. Perumusan temuan & Temuan, kandidat rekomendasi, keterbatasan & Setiap temuan disertai tingkat kekuatan klaim (kuat, terbatas, atau indikatif), ukuran ketidakpastian, dan keterbatasannya; tidak ada klaim tentang perilaku pengguna; setiap kandidat rekomendasi memuat elemen, bukti, arah perbaikan, dan pernyataan perlu diuji dengan pengguna, dengan elemen berkriteria K3 diprioritaskan \\
+\end{longtable}
+
+% =====================================================================
+\section{Data}
+\label{sec:data}
+
+\subsection{Dataset UEyes (\emph{Benchmark})}
+\label{subsec:ueyes}
+
+UEyes \citep{jiang2023ueyes} adalah dataset \emph{eye-tracking} antarmuka digital yang terdiri atas 1.980 tangkapan layar pada empat kategori (laman web, desktop, \emph{mobile}, dan poster), dikumpulkan dari 62 partisipan menggunakan \emph{eye-tracker} Gazepoint GP3 60~Hz, dengan peta \emph{saliency} pada durasi 1, 3, dan 7 detik. Penelitian ini memakai dua kategori yang paling dekat secara struktural dengan openIMIS, yaitu desktop dan web, dengan acuan berupa \emph{heatmap} dan \emph{fixation map} berdurasi 7 detik. Durasi 7 detik dipilih karena merupakan durasi pengamatan terpanjang sehingga mencerminkan eksplorasi yang paling menyeluruh. Perlu dicatat bahwa UEyes dikumpulkan tanpa tugas spesifik (\emph{free-viewing}) \citep{jiang2023ueyes}, sehingga kesesuaiannya dengan perilaku \emph{task-driven} pada openIMIS tidak dapat diasumsikan.
+
+% CATATAN [CEK]: paper UEyes melaporkan 495 gambar per kategori. Jelaskan penyebab
+% 482 gambar pada kategori desktop sebelum Tabel 3.2 dipakai.
+\begin{table}[H]
+  \centering
+  \caption{Subset UEyes yang digunakan untuk \emph{benchmark}}
+  \label{tab:ueyes}
+  \begin{tabular}{lr}
+    \hline
+    \textbf{Kategori} & \textbf{Jumlah gambar} \\
+    \hline
+    Desktop & 482 \\
+    Web & 495 \\
+    \hline
+    Total & 977 \\
+    \hline
+  \end{tabular}
+\end{table}
+
+Tidak ada pembagian data latih, validasi, dan uji karena penelitian tidak melakukan pelatihan. Seluruh gambar pada Tabel~\ref{tab:ueyes} berfungsi sebagai data uji untuk mengukur kredibilitas umum model, bukan sebagai basis pelatihan untuk domain openIMIS.
+
+\subsection{Data Antarmuka openIMIS}
+\label{subsec:data-openimis}
+
+Data antarmuka berupa tangkapan layar yang diambil dari server demo resmi openIMIS pada layar dan alur tugas yang dipilih berdasarkan kriteria berikut:
 \begin{enumerate}
-    \item \textbf{Tahap 1:} Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    \item \textbf{Tahap 2:} Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    \item \textbf{Tahap 3:} Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-    \item \textbf{Tahap 4:} Duis aute irure dolor in reprehenderit in voluptate velit esse.
-    \item \textbf{Tahap 5:} Excepteur sint occaecat cupidatat non proident.
+  \item alur tugas tercakup pada minimal dua sumber berbeda (mis.\ webinar dan dokumentasi resmi), sehingga pelabelan dengan aturan dua sumber dapat dilakukan;
+  \item layar yang bersangkutan dapat dibuka pada server demo saat pengambilan data;
+  \item layar memuat elemen formulir yang kotaknya dapat diekstraksi dari DOM;
+  \item direncanakan tiga alur tugas dari empat proses yang didemonstrasikan pada Sesi~4 (pendaftaran, penelusuran, klaim, pembaruan), dengan minimum dua alur dan minimal tiga layar secara keseluruhan.
+  % CATATAN: butir 4 usulan, menunggu persetujuan pembimbing.
 \end{enumerate}
 
-\section{Perancangan Sistem}
+Protokol pengambilan dibakukan agar tangkapan layar dan kotak elemen selaras: (a)~setiap layar diambil pada posisi gulir paling atas (\emph{viewport} awal), karena pengguna pertama kali melihat layar dari posisi tersebut; (b)~ukuran jendela ditetapkan $1920 \times 1080$ piksel CSS dengan \emph{zoom} 100\% dan \emph{device pixel ratio} 1 melalui mode perangkat pada \emph{DevTools}, dan dicatat sebagai metadata; (c)~kolom dibiarkan dalam keadaan kosong, karena label kolom berubah posisi setelah diisi; (d)~tangkapan layar diambil dengan fitur \emph{capture screenshot} peramban pada sesi yang sama dengan ekstraksi kotak; dan (e)~tanggal akses, ukuran \emph{viewport}, dan ciri versi antarmuka dicatat sebagai metadata. Pengambilan awal pada layar Family/Group (\emph{viewport} $2573 \times 1385$ piksel) bersifat uji coba teknis dan diulang dengan pengaturan baku di atas.
 
-\subsection{Arsitektur Umum}
+Elemen yang berada di luar \emph{viewport} awal tidak dianalisis. Hal ini dinyatakan sebagai batasan penelitian.
 
-% TODO: Jelaskan komponen-komponen utama sistem yang dirancang.
-% Sertakan diagram arsitektur jika ada.
+\subsection{Sumber Pelabelan}
+\label{subsec:sumber}
 
-Arsitektur sistem yang dirancang terdiri dari beberapa komponen utama:
+Sumber pelabelan terdiri atas (1)~video webinar pelatihan proses openIMIS tahun 2020, khususnya Sesi~4 yang diselenggarakan pada 13 Mei 2020 dan mendemonstrasikan proses (pendaftaran peserta, penelusuran informasi peserta, entri klaim dan peninjauan medis, serta pembaruan keanggotaan), (2)~dokumentasi resmi dan wiki openIMIS, dan (3)~video demonstrasi fitur openIMIS tahun 2026. Daftar sesi pelatihan beserta tautan rekamannya tersedia pada halaman wiki \emph{openIMIS online training} \citep{openimis2026}.
 
-\begin{itemize}
-    \item \textbf{Komponen A:} Lorem ipsum dolor sit amet, consectetur adipiscing elit.
-    \item \textbf{Komponen B:} Sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.
-    \item \textbf{Komponen C:} Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris.
-\end{itemize}
+\begin{table}[H]
+  \centering
+  \caption{Atribut yang dicatat untuk setiap sumber}
+  \label{tab:atribut-sumber}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.36\textwidth}>{\raggedright\arraybackslash}X}
+    \hline
+    \textbf{Atribut} & \textbf{Keterangan} \\
+    \hline
+    ID sumber & Kode unik (mis.\ S01) \\
+    Jenis & Webinar, dokumentasi/wiki, atau video demo \\
+    Judul dan URL & Identitas sumber \\
+    Tanggal terbit/unggah dan tanggal akses & Untuk keterlacakan \\
+    Versi/ciri antarmuka yang tampil & Nomor versi bila disebut, atau ciri tampilan \\
+    Modul/alur yang dicakup & Menentukan sumber mana yang dapat mendukung label suatu elemen \\
+    \hline
+  \end{tabularx}
+\end{table}
 
-% TODO: Ganti dengan diagram arsitektur sistem Anda.
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.9\textwidth]{figures/arsitektur-sistem}
-%   \caption{Diagram Arsitektur Sistem}
-%   \label{fig:arsitektur}
-% \end{figure}
+Sumber berasal dari versi antarmuka yang berbeda dengan server demo pada saat pengambilan data, dan nomor versi tidak selalu disebutkan. Pemetaan elemen dilakukan berdasarkan fungsinya, bukan posisi piksel, dan perbedaan versi dinyatakan sebagai keterbatasan.
 
-\subsection{Bagan Alir Metodologi}
+\subsection{Kotak Elemen dari DOM}
+\label{subsec:kotak-dom}
 
-% TODO: Tambahkan bagan alir (flowchart) metodologi penelitian.
+Posisi dan ukuran setiap elemen diperoleh dari \emph{Document Object Model} (DOM) halaman, yaitu struktur internal yang dibangun peramban untuk setiap elemen yang ditampilkan. Posisi dan ukuran kotak elemen relatif terhadap \emph{viewport} dapat dibaca melalui metode \texttt{getBoundingClientRect()} yang didefinisikan pada CSSOM View Module \citep{pieters2013cssom}. Pemodelan atensi pada tingkat elemen laman web juga pernah ditempuh oleh \citet{buscher2009what}. Untuk setiap elemen dicatat label teks, jenis, status wajib isi, status keterlihatan, serta posisi dan ukuran kotak dalam piksel gambar.
 
-% TODO: Ganti dengan bagan alir metodologi Anda.
-% \begin{figure}[H]
-%   \centering
-%   \includegraphics[width=0.8\textwidth]{figures/bagan-alir}
-%   \caption{Bagan Alir Metodologi Penelitian}
-%   \label{fig:bagan-alir}
-% \end{figure}
+\begin{table}[H]
+  \centering
+  \caption{Contoh keluaran ekstraksi kotak elemen pada layar Family/Group (cuplikan uji coba awal; \emph{viewport} $2573 \times 1385$ piksel)}
+  \label{tab:contoh-dom}
+  \begin{tabular}{llcrrrr}
+    \hline
+    \textbf{Label} & \textbf{Jenis} & \textbf{Wajib} & \textbf{x} & \textbf{y} & \textbf{Lebar} & \textbf{Tinggi} \\
+    \hline
+    Region * & \emph{dropdown} & ya & 58 & 287 & 570 & 63 \\
+    Confirmation No. & teks/lainnya & tidak & 848 & 374 & 564 & 63 \\
+    Insurance No. * & teks/lainnya & ya & 61 & 624 & 761 & 63 \\
+    \hline
+  \end{tabular}
+\end{table}
 
-\section{Lingkungan Pengembangan}
+Kolom ``Jenis'' dihasilkan otomatis dan diperiksa secara visual; klasifikasi yang keliru dikoreksi secara manual dan koreksinya dicatat.
 
-% TODO: Jelaskan spesifikasi perangkat keras dan lunak yang digunakan.
+% =====================================================================
+\section{Rancangan Metode}
+\label{sec:rancangan-metode}
 
-Lingkungan pengembangan yang digunakan dalam penelitian ini adalah:
+\subsection{Model Prediksi Atensi Visual}
+\label{subsec:model}
 
-\begin{itemize}
-    \item \textbf{Sistem Operasi:} Lorem ipsum dolor sit amet.
-    \item \textbf{Perangkat Lunak:} Sed do eiusmod tempor incididunt.
-    \item \textbf{Perangkat Keras:} Ut enim ad minim veniam.
-\end{itemize}
+Model yang digunakan adalah TranSalNet\_Res \citep{lou2022transalnet}, yaitu model yang menggabungkan \emph{encoder} CNN berbasis ResNet-50 dengan \emph{encoder Transformer}, dengan bobot pra-latih yang dilatih pada dataset SALICON \citep{jiang2023ueyes}. SALICON berisi data pengamatan bebas (\emph{free-viewing}) yang dikumpulkan dengan paradigma kontingen-\emph{mouse} pada citra MS COCO \citep{jiang2023ueyes}, bukan pada antarmuka digital, sehingga terdapat pergeseran domain antara data pelatihan model dan objek studi penelitian ini. Bobot model tidak diubah. Prapemrosesan bawaan TranSalNet mengubah ukuran gambar agar muat pada $384 \times 288$ piksel dengan mempertahankan rasio aspek (area sisa diisi \emph{padding}), lalu nilai piksel dinormalisasi ke rentang $[0, 1]$. Peta prediksi dikembalikan ke ukuran gambar asli dengan membuang \emph{padding}, kemudian dikonversi ke 8-bit. Prapemrosesan yang sama digunakan baik pada \emph{benchmark} UEyes maupun pada \emph{screenshot} openIMIS. Peta 8-bit dipakai baik untuk \emph{benchmark} maupun untuk perhitungan skor per elemen agar pemrosesan identik; pembulatan ke 256 tingkat berdampak dapat diabaikan karena skor elemen merupakan rerata banyak piksel di dalam kotak, dan nilai kembar ditangani oleh peringkat tengah pada Persamaan~\eqref{eq:persentil}.
 
-\section{Metode Pengujian}
+Karena peta prediksi dikembalikan ke ukuran asli, koordinat kotak dari DOM dapat dipakai langsung pada peta. Namun resolusi efektif informasi atensi jauh lebih rendah daripada resolusi \emph{screenshot} (\emph{screenshot} $1920 \times 1080$ piksel diperkecil dengan faktor 0,2 menjadi $384 \times 216$ piksel pada ruang model, lalu diberi \emph{padding} hingga $384 \times 288$), sehingga elemen yang kecil diwakili oleh sedikit piksel; misalnya, kolom formulir setinggi 63 piksel hanya diwakili sekitar 13 piksel pada ruang model. Hal ini dicatat sebagai keterbatasan.
 
-% TODO: Jelaskan metode pengujian yang akan digunakan.
+\subsection{Pelabelan Elemen Informasi Utama}
+\label{subsec:pelabelan}
 
-Pengujian dilakukan dengan beberapa pendekatan:
+\textbf{Definisi operasional.} Elemen informasi utama adalah elemen antarmuka yang secara konsisten diperlakukan oleh sumber resmi (dokumentasi, materi pelatihan, video demonstrasi) sebagai pusat pelaksanaan suatu langkah proses administratif, yang didukung oleh minimal dua sumber berbeda, dan yang memenuhi minimal dua kriteria pada Tabel~\ref{tab:kriteria}. Kriteria dihitung secara gabungan lintas sumber, sehingga K1 yang ditemukan pada satu sumber dan K2 pada sumber lain dihitung sebagai dua kriteria; K4 yang diperoleh dari DOM turut dihitung sebagai kriteria, tetapi tidak dihitung sebagai sumber, sehingga syarat dua sumber tetap harus dipenuhi oleh bukti dari dokumentasi, materi pelatihan, atau video demonstrasi. Apabila pilot tidak mencapai jumlah elemen berlabel pada Tabel~\ref{tab:evaluasi-pilot}, nilai ini diturunkan menjadi satu kriteria dan perubahan tersebut dicatat.
+% CATATAN: penurunan menjadi satu kriteria adalah usulan, menunggu persetujuan pembimbing.
 
+\begin{table}[H]
+  \centering
+  \caption{Kriteria pelabelan}
+  \label{tab:kriteria}
+  \begin{tabularx}{\textwidth}{>{\raggedright\arraybackslash}p{0.07\textwidth}>{\raggedright\arraybackslash}p{0.18\textwidth}>{\raggedright\arraybackslash}X>{\raggedright\arraybackslash}p{0.26\textwidth}}
+    \hline
+    \textbf{Kode} & \textbf{Kriteria} & \textbf{Definisi operasional} & \textbf{Cara verifikasi} \\
+    \hline
+    K1 & Dipakai pada langkah inti alur & Elemen diisi, dibaca, atau diklik pada langkah yang oleh sumber disebut sebagai bagian inti alur tugas & Catatan bukti jenis ``dipakai di demo'' atau ``disebut dokumentasi'' \\
+    \hline
+    K2 & Ditekankan eksplisit & Sumber menyatakan secara tegas bahwa elemen itu wajib, penting, atau perlu diperhatikan & Catatan bukti jenis ``ditekankan'' \\
+    \hline
+    K3 & Menentukan status atau keputusan & Nilai elemen menentukan status atau hasil proses & Catatan bukti yang menghubungkan nilai elemen dengan hasil proses \\
+    \hline
+    K4 & Kolom wajib isi pada antarmuka & Elemen memiliki atribut wajib isi pada DOM & Otomatis dari data ekstraksi DOM; tidak dihitung sebagai sumber \\
+    \hline
+  \end{tabularx}
+\end{table}
+
+\textbf{Prosedur.} Pelabelan dilakukan oleh satu pelabel (peneliti) menggunakan buku kode terdokumentasi dengan langkah berikut: (1)~mendaftar sumber; (2)~memecah sumber menjadi langkah tugas dan mencatat elemen yang dipakai atau ditekankan beserta waktu atau bagian dokumen; (3)~menerapkan kriteria Tabel~\ref{tab:kriteria}; (4)~memberi label pada elemen yang didukung minimal dua sumber berbeda dan memenuhi minimal dua kriteria pada Tabel~\ref{tab:kriteria}; (5)~memetakan elemen pada sumber ke elemen pada hasil ekstraksi DOM berdasarkan fungsi dan teks labelnya, dan mencatat kode penyebab untuk elemen yang tidak dapat dipetakan, yaitu V (perbedaan versi: diganti nama, dipindah, digabung, atau dihapus), P (berada di luar \emph{viewport} awal), S (tidak tertangkap selektor, mis.\ tombol atau kotak pencarian), K (hanya muncul setelah interaksi), atau N (sumber merujuk tindakan atau konsep, bukan elemen antarmuka tertentu); dan (6)~mencatat status perbedaan versi untuk setiap elemen. Bukti dicatat dengan kata-kata peneliti sendiri secara ringkas, bukan salinan transkrip. Sebelum sesi pelabelan pertama, \emph{screenshot} dan kotak elemen DOM untuk seluruh layar alur pilot diambil terlebih dahulu (Subbab~\ref{subsec:data-openimis} dan~\ref{subsec:ekstraksi-dom}), sehingga lembar kerja pelabelan dapat disusun dengan satu baris untuk setiap elemen DOM dan kedua sesi menilai daftar elemen yang sama pada versi antarmuka yang sama.
+
+\textbf{Pilot dan evaluasi pilot.} Sebelum pelabelan penuh, dilakukan pilot pada satu alur tugas yang mencakup seluruh layar pada alur tersebut. Hasil pilot dievaluasi dengan kriteria pada Tabel~\ref{tab:evaluasi-pilot}, yang ditetapkan sebelum pilot dijalankan agar penilaian tidak dipengaruhi hasil.
+
+% CATATAN: seluruh ambang pada Tabel 3.6 adalah usulan, menunggu persetujuan pembimbing.
+% CATATAN [CEK]: cocokkan rumus kesepakatan positif (PA) dengan makalah Cicchetti dan
+% Feinstein (1990) sebelum dikutip.
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.17\textwidth}>{\raggedright\arraybackslash}p{0.27\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
+\caption{Kriteria evaluasi pilot dan penyesuaian prosedur}
+\label{tab:evaluasi-pilot}\\
+\hline
+\textbf{Pertanyaan} & \textbf{Lanjut tanpa penyesuaian bila} & \textbf{Tindakan bila tidak terpenuhi} \\
+\hline
+\endfirsthead
+\multicolumn{3}{l}{\emph{Tabel~\ref{tab:evaluasi-pilot} (lanjutan)}}\\
+\hline
+\textbf{Pertanyaan} & \textbf{Lanjut tanpa penyesuaian bila} & \textbf{Tindakan bila tidak terpenuhi} \\
+\hline
+\endhead
+\hline
+\endfoot
+Apakah jumlah elemen berlabel cukup? & $\geq 10$ elemen berlabel pada alur pilot (diturunkan dari target total $\geq 30$ elemen pada tiga alur) & Dilakukan berurutan dan berhenti begitu ambang tercapai: (1)~tambah layar atau alur pada pilot; (2)~turunkan syarat dari minimal dua kriteria menjadi minimal satu kriteria; (3)~bila masih kurang, definisi elemen informasi utama diganti dengan properti dari DOM (mis.\ kolom wajib isi), hanya dengan persetujuan pembimbing karena mengubah pertanyaan penelitian. Setiap perubahan dicatat beserta alasannya \\
+\hline
+Apakah kriteria diterapkan konsisten? & Kappa kode-ulang $\geq 0{,}67$, dihitung pada seluruh elemen hasil ekstraksi DOM pada layar-layar alur pilot & Tentukan dulu penyebabnya. (a)~Bila $p_o \geq 0{,}85$ dan kesepakatan positif PA $\geq 0{,}80$, kappa rendah dianggap akibat sedikitnya elemen berlabel (paradoks prevalensi), bukan inkonsistensi; buku kode tidak direvisi, dan $p_o$, $\kappa$, PA, serta elemen yang berubah label dilaporkan. (b)~Bila tidak, elemen yang berubah label ditelaah untuk menemukan kriteria yang ambigu, definisi kriteria dipertajam dan diberi contoh kasus, lalu pengodean ulang dilakukan \\
+\hline
+Apakah pemetaan ke layar berhasil? & $\geq 80\%$ elemen yang lolos aturan dua sumber dapat dipetakan ke elemen DOM saat ini; elemen berkode P, S, dan N tidak dihitung karena berada di luar lingkup sejak awal & Dilakukan berurutan: (1)~untuk layar yang pemetaannya buruk, tambahkan sumber yang versinya lebih dekat dengan server demo (mis.\ video demonstrasi 2026 atau dokumentasi terbaru), lalu ulangi pemetaan; (2)~bila masih di bawah ambang, keluarkan layar yang persentase pemetaannya sendiri di bawah 80\%, sedangkan alur tetap dipakai selama masih ada layar tersisa; (3)~periksa ulang ambang jumlah elemen berlabel pada baris pertama. Layar yang dikeluarkan dicatat beserta alasannya sebagai keterbatasan \\
+\end{longtable}
+
+\textbf{Reliabilitas.} Konsistensi keputusan diperiksa hanya pada alur pilot, melalui pengodean ulang oleh peneliti yang sama (\emph{intra-rater}). Sesi kedua dilaksanakan sekurang-kurangnya dua minggu setelah sesi pertama dan mengulang langkah (2) sampai (4) prosedur pelabelan: sumber ditonton dan dibaca ulang, bukti dicatat ulang, lalu kriteria diterapkan dan label diberikan. Daftar sumber (langkah 1) dipakai ulang karena tidak memuat penilaian, sedangkan pemetaan ke DOM (langkah 5) dinilai terpisah melalui ambang pemetaan pada Tabel~\ref{tab:evaluasi-pilot}. Sesi kedua memakai lembar kerja baru dengan urutan elemen diacak; lembar kerja sesi pertama disimpan terpisah dan baru dibuka setelah sesi kedua selesai. Kesepakatan dilaporkan sebagai proporsi kesepakatan dan koefisien kappa \citep{cohen1960coefficient,hallgren2012computing}:
+\begin{equation}
+  \kappa = \frac{p_o - p_e}{1 - p_e}
+  \label{eq:kappa}
+\end{equation}
+dengan $p_o$ proporsi elemen yang diberi label sama pada kedua sesi dan $p_e$ proporsi kesepakatan yang diharapkan terjadi secara kebetulan, dihitung dari proporsi marginal kedua sesi. Satuan perhitungan adalah setiap elemen hasil ekstraksi DOM pada layar-layar alur pilot, sehingga kedua sesi menilai himpunan elemen yang sama; elemen tanpa bukti dari sumber dinilai tidak berlabel. Elemen dari sumber yang tidak dapat dipetakan ke DOM tidak termasuk dalam perhitungan kappa, tetapi diperhitungkan pada ambang pemetaan. Kappa dihitung pada label akhir (berlabel atau tidak berlabel), disertai daftar elemen yang berubah label dan proporsi kesepakatan per kriteria K1 sampai K3 secara deskriptif untuk menelusuri sumber ketidaksepakatan.
+
+Ambang kesepakatan mengikuti batas bawah tentatif 0,67 (Krippendorff, 1980, dikutip dalam \citealp{hallgren2012computing}); Landis dan Koch (1977, dikutip dalam \citealp{hallgren2012computing}) menyebut rentang 0,61 sampai 0,80 sebagai kesepakatan substansial, dan kedua batas tersebut diperdebatkan \citep{hallgren2012computing}. Ambang 80\% pada pemetaan elemen merupakan pertimbangan peneliti, bukan standar baku; ambang ini dimaksudkan mengukur apakah perbedaan versi antara sumber dan server demo masih dapat diatasi melalui pemetaan berbasis fungsi, sehingga penyebutnya hanya mencakup elemen berkode V dan K selain elemen yang berhasil dipetakan. Jumlah elemen untuk setiap kode penyebab tetap dilaporkan, karena banyaknya elemen berkode P atau S menunjukkan batas cakupan penelitian; apabila banyak elemen calon utama berkode S, perluasan selektor (Subbab~\ref{subsec:ekstraksi-dom}) diputuskan sebelum pelabelan penuh. Kesepakatan yang tinggi hanya menunjukkan keterulangan keputusan, bukan kebenaran label, sehingga hasil pelabelan tetap dinyatakan eksploratif karena tidak ada validasi oleh pakar domain.
+
+\textbf{Label final.} Label yang dipakai pada analisis diambil dari sesi terakhir yang menggunakan buku kode final. Elemen yang labelnya berbeda antar-sesi diputuskan ulang dengan membaca kembali sumbernya, dan alasannya dicatat pada buku kode. Alur pilot turut dianalisis bersama alur lainnya; apabila buku kode direvisi setelah pilot, label alur pilot diambil dari putaran pengodean yang menggunakan buku kode hasil revisi. Alur selain pilot dilabel satu kali menggunakan buku kode final.
+
+\subsection{Ekstraksi Kotak Elemen dari DOM}
+\label{subsec:ekstraksi-dom}
+
+Kotak elemen diperoleh melalui skrip yang dijalankan pada konsol peramban dan bersifat hanya-baca. Satu elemen didefinisikan sebagai kontainer terluar komponen kolom formulir (\texttt{MuiFormControl-root}) atau kotak centang berlabel (\texttt{MuiFormControlLabel-root}), sehingga label dan isian kolom diperlakukan sebagai satu elemen. Elemen dengan ukuran nol dilewati, keterlihatan elemen diperiksa pada titik tengahnya, dan seluruh koordinat dikalikan dengan rasio piksel perangkat (\emph{device pixel ratio}) agar sesuai dengan piksel gambar. Kotak elemen dipotong (\emph{clip}) ke batas \emph{viewport}; elemen yang bagian terlihatnya kurang dari 50\% luas kotaknya dikeluarkan dari analisis dan dicatat. Ambang 50\% merupakan pertimbangan peneliti. Nama kelas yang dibangkitkan otomatis oleh pustaka (mis.\ berawalan \texttt{jss}) tidak digunakan karena dapat berubah antarversi \emph{build}. Kesesuaian pasangan \emph{screenshot} dan kotak diperiksa dengan membandingkan lebar dan tinggi gambar terhadap ukuran \emph{viewport} yang dicetak oleh skrip.
+
+Skrip pada tahap ini hanya menangkap elemen kolom formulir. Jenis elemen lain (tabel, tombol, judul, menu) ditambahkan pada selektor apabila alur yang dipilih memuatnya.
+
+\subsection{Perhitungan Skor \emph{Saliency} per Elemen}
+\label{subsec:skor}
+
+Perhitungan pada subbab ini dikerjakan oleh skrip analisis (\emph{notebook}) yang menerima peta prediksi dan berkas kotak elemen. Skrip ini merupakan instrumen penelitian dan tidak diintegrasikan ke dalam aplikasi web pada Subbab~\ref{subsec:aplikasi}. Peta prediksi $S$ untuk setiap \emph{screenshot} distandarkan menjadi $S_z$, dengan $\mu_S$ dan $\sigma_S$ masing-masing rerata dan simpangan baku seluruh piksel pada peta tersebut:
+\begin{equation}
+  S_z(x,y) = \frac{S(x,y) - \mu_S}{\sigma_S}
+  \label{eq:standardisasi}
+\end{equation}
+Skor \emph{saliency} elemen $e$ dengan kotak $B_e$ adalah rerata nilai peta terstandarkan di dalam kotak:
+\begin{equation}
+  s_e = \frac{1}{|B_e|}\sum_{(x,y)\in B_e} S_z(x,y)
+  \label{eq:skor}
+\end{equation}
+
+Standardisasi pada Persamaan~\eqref{eq:standardisasi} tidak mengubah $P_e$ maupun $T$, karena persentil hanya bergantung pada urutan skor di dalam satu layar. Standardisasi dipertahankan agar $s_e$ dapat dilaporkan dan dibandingkan secara deskriptif antarlayar, misalnya ``elemen X berada 1,5 simpangan baku di atas rerata layarnya''.
+
+Skor tersebut dibandingkan dengan himpunan pembanding $C_e$ menggunakan persentil dengan penanganan nilai kembar melalui peringkat tengah:
+\begin{equation}
+  P_e = 100 \times \frac{\left|\{c\in C_e : s_c < s_e\}\right| + 0{,}5\,\left|\{c\in C_e : s_c = s_e\}\right|}{|C_e|}
+  \label{eq:persentil}
+\end{equation}
+
+Nilai $P_e = 50$ berarti elemen $e$ tidak berbeda dari pembanding. Dua himpunan pembanding digunakan: \textbf{pembanding B (utama)}, yaitu seluruh elemen tidak berlabel pada layar yang sama, apa pun jenisnya, dan \textbf{pembanding A (analisis sensitivitas)}, yaitu elemen tidak berlabel dengan jenis yang sama pada layar yang sama (kolom isian dengan kolom isian, \emph{dropdown} dengan \emph{dropdown}). Elemen berlabel lain tidak dijadikan pembanding, karena pertanyaan penelitian membandingkan elemen berlabel dengan elemen tidak berlabel. Pembanding B dipakai sebagai ukuran utama karena pertanyaan penelitian menyangkut tingkat menonjolnya elemen informasi utama pada antarmuka sebagaimana adanya; jenis elemen merupakan bagian dari keputusan desain, sehingga pengaruhnya termasuk dalam fenomena yang diamati. Pembanding A menjawab pertanyaan yang lebih sempit, yaitu apakah perbedaan tetap ada setelah jenis elemen disamakan, sehingga dipakai untuk menilai sejauh mana hasil utama berkaitan dengan jenis elemen. Karena jenis elemen berkaitan dengan ukuran kotak, sedangkan skor rerata dalam kotak peka terhadap ukuran kotak, luas kotak elemen berlabel dan pembandingnya dilaporkan per layar dalam bentuk median luas kotak elemen berlabel, median luas kotak pembanding B, dan rasio keduanya.
+
+Pada pembanding B, himpunan pembanding hanya kosong apabila seluruh elemen pada suatu layar berlabel; layar seperti ini tidak disertakan dalam analisis utama dan dilaporkan secara deskriptif. Pada analisis sensitivitas dengan pembanding A, elemen berlabel yang tidak memiliki pembanding sejenis ($|C_e| = 0$), yaitu elemen pada kelompok layar dan jenis yang seluruh anggotanya berlabel, dikeluarkan dari analisis tersebut. Label elemen tersebut tidak dapat berpindah pada pengacakan (Subbab~\ref{subsec:permutasi}), sehingga persentilnya bernilai tetap pada setiap permutasi dan akan menggeser pusat distribusi nol $T$ dari 50; selain itu, menghitungnya terhadap pembanding lain akan mencampur dua definisi pembanding dalam satu statistik. Elemen tersebut tetap tercakup dalam analisis utama dengan pembanding B. Apabila elemen yang dikeluarkan dari analisis pembanding A melebihi 20\% dari seluruh elemen berlabel, jenis elemen digabung menurut hierarki jenis yang ditetapkan sebelum pelabelan (mis.\ kolom teks dan \emph{dropdown} digabung menjadi ``kolom isian'') \textbf{[hierarki ditetapkan sebelum pelabelan]}. Keputusan ini diambil pada pemeriksaan kelayakan uji, yang hanya memakai data label dan DOM. Elemen dengan pembanding sedikit tidak dikeluarkan, tetapi $|C_e|$ pada kedua pembanding dilaporkan untuk setiap elemen. Ambang 20\% merupakan pertimbangan peneliti.
+
+Pembanding seluruhnya berasal dari kotak DOM; kotak yang ditempatkan secara acak tidak digunakan karena sering jatuh pada area kosong yang cenderung bernilai rendah dan akan membiaskan hasil ke arah elemen berlabel.
+
+\subsection{Rancangan Aplikasi Web}
+\label{subsec:aplikasi}
+
+% CATATAN: subbab ini bergantung pada jawaban Pak Lukman soal perlu tidaknya aplikasi web.
+Aplikasi web memiliki satu fitur inti. Masukan berupa \emph{screenshot} openIMIS yang diunggah pengguna; keluaran berupa peta atensi yang ditumpangkan pada \emph{screenshot} tersebut. Aplikasi memakai model dan prapemrosesan yang sama dengan Subbab~\ref{subsec:model}, dan teknologi implementasinya \textbf{[dipilih saat implementasi]}. Aplikasi tidak menghitung skor per elemen dan tidak menjalankan uji statistik; kedua hal tersebut dikerjakan oleh skrip analisis pada Subbab~\ref{subsec:skor} sebagai instrumen penelitian. Kesamaan peta keluaran aplikasi dengan peta keluaran skrip inferensi menjadi indikator capaian (Tabel~\ref{tab:tahapan}). Apabila waktu tidak memadai, ruang lingkup aplikasi tidak diperluas dan tidak mengubah rancangan analisis.
+
+% =====================================================================
+\section{Rancangan Pengujian dan Analisis}
+\label{sec:pengujian}
+
+\subsection{Protokol Evaluasi \emph{Benchmark}}
+\label{subsec:benchmark}
+
+Kredibilitas umum model diukur dengan membandingkan peta prediksi $S$ terhadap acuan UEyes. Notasi: $G$ adalah peta acuan (\emph{heatmap}), $F$ adalah peta fiksasi biner (bernilai 1 pada piksel fiksasi), $N=\sum_i F_i$ jumlah piksel fiksasi, dan indeks $i$ mencakup seluruh piksel. Implementasi metrik diadaptasi dari kode evaluasi resmi UEyes \citep{jiang2023ueyes} dengan dua penyesuaian yang didokumentasikan: normalisasi peta acuan dikoreksi agar memakai nilai maksimum peta acuan itu sendiri, dan tipe \texttt{np.bool} yang sudah dihapus pada NumPy versi baru diganti dengan \texttt{bool} bawaan Python.
+
+\emph{Correlation Coefficient} (CC) adalah korelasi Pearson antara peta prediksi dan peta acuan (nilai lebih tinggi lebih baik):
+\begin{equation}
+  \mathrm{CC} = \frac{\sum_i (S_i-\bar{S})(G_i-\bar{G})}{\sqrt{\sum_i (S_i-\bar{S})^2\;\sum_i (G_i-\bar{G})^2}}
+  \label{eq:cc}
+\end{equation}
+
+\emph{Normalized Scanpath Saliency} (NSS) adalah rerata nilai peta prediksi terstandarkan pada lokasi fiksasi (nilai lebih tinggi lebih baik):
+\begin{equation}
+  \mathrm{NSS} = \frac{1}{N}\sum_i F_i\,\frac{S_i-\mu_S}{\sigma_S}
+  \label{eq:nss}
+\end{equation}
+% CATATAN [CEK]: pastikan berkas yang dipakai sebagai F adalah fixmaps_7s, bukan
+% heatmaps_7s. Kode UEyes membuat mask dengan astype(bool).
+
+\emph{Kullback-Leibler Divergence} (KLD) mengukur divergensi dari distribusi peta prediksi terhadap distribusi peta acuan, keduanya dinormalisasi hingga berjumlah satu (nilai lebih rendah lebih baik):
+\begin{equation}
+  \mathrm{KLD} = \sum_i p_i \ln\frac{p_i}{q_i},\qquad p_i=\frac{S_i+\varepsilon}{\sum_j (S_j+\varepsilon)},\quad q_i=\frac{G_i+\varepsilon}{\sum_j (G_j+\varepsilon)}
+  \label{eq:kld}
+\end{equation}
+dengan $\varepsilon$ adalah epsilon mesin tipe \emph{float32} ($\approx 1{,}19\times10^{-7}$) yang mencegah pembagian dengan nol. Arah perhitungan pada Persamaan~\eqref{eq:kld} mengikuti implementasi UEyes, yaitu dari peta prediksi terhadap peta acuan, sehingga penalti lebih besar dijatuhkan pada atensi yang diprediksi pada area yang tidak diperhatikan. Arah ini berbeda dengan konvensi Bylinskii et al.\ (2019), yang menghitung divergensi dari peta acuan terhadap peta prediksi, sehingga nilai KLD tidak dibandingkan langsung dengan penelitian lain tanpa memeriksa arahnya. Arah pada implementasi UEyes ditentukan dari pembacaan kode evaluasi resminya, yang memanggil fungsi \texttt{entropy} dengan peta prediksi sebagai argumen pertama.
+
+Ketiga metrik dilaporkan sebagai rerata dan simpangan baku \textbf{per kategori} (desktop dan web), tidak digabung, dan perbedaan arah antarkategori dilaporkan tanpa penyesuaian. Sebagai konteks, metrik yang sama dihitung untuk dua \emph{baseline} yang tidak memanfaatkan isi gambar, pada gambar yang sama:
 \begin{enumerate}
-    \item \textbf{Pengujian Fungsional:} Lorem ipsum dolor sit amet.
-    \item \textbf{Pengujian Non-Fungsional:} Sed do eiusmod tempor incididunt.
-    \item \textbf{Pengujian Lainnya:} Ut enim ad minim veniam.
+  \item \textbf{Peta posisi rata-rata manusia (\emph{baseline} utama).} Untuk setiap gambar, \emph{baseline} adalah rerata peta acuan $G$ seluruh gambar lain dalam kategori yang sama (\emph{leave-one-out}), sehingga peta acuan gambar yang dievaluasi tidak ikut membentuk \emph{baseline}-nya. Seluruh peta acuan terlebih dahulu diubah ke resolusi bersama \textbf{[ditetapkan; usulan rasio 16:9 mengikuti openIMIS]}, lalu \emph{baseline} dikembalikan ke ukuran gambar asli. \emph{Baseline} ini dipilih sebagai \emph{baseline} utama karena Jiang et al.\ (2023) melaporkan bahwa fiksasi pada antarmuka, termasuk kategori web dan desktop, terkonsentrasi di kuadran kiri atas dan bukan di tengah, sehingga Gaussian tengah merupakan pembanding yang lemah untuk data ini.
+  \item \textbf{Peta terpusat (\emph{center-bias}, \emph{baseline} pelengkap).} Distribusi Gaussian dua dimensi di tengah gambar dengan sebaran $\sigma$ sebesar 0,25 dari lebar dan tinggi gambar, disertai analisis kepekaan pada $\sigma = 0{,}15$ dan $\sigma = 0{,}35$. \emph{Baseline} ini dipertahankan karena lazim dilaporkan dalam evaluasi \emph{saliency} \citep{bylinskii2019what}. Penetapan $\sigma$ merupakan keputusan desain, bukan nilai optimum empiris; apabila model unggul hanya pada sebagian nilai $\sigma$, hal tersebut dilaporkan.
 \end{enumerate}
+
+Untuk setiap \emph{baseline}, kategori, dan nilai $\sigma$ dilaporkan (a)~rerata selisih per gambar (model $-$ \emph{baseline}) untuk CC, NSS, dan KLD (untuk KLD, selisih negatif berarti model lebih baik), dan (b)~proporsi gambar tempat model mengungguli \emph{baseline}; keduanya bersifat deskriptif. Model dinyatakan mengungguli peta posisi rata-rata manusia pada suatu kategori apabila proporsi gambar tempat model unggul melebihi 50\% pada sekurang-kurangnya dua dari tiga metrik; ketentuan ini merupakan pertimbangan peneliti. Hasil perbandingan ini menentukan cara menafsirkan peta model pada openIMIS: apabila model mengungguli peta posisi pada kedua kategori, peta model ditafsirkan sebagai prediksi yang memuat informasi isi layar; apabila tidak pada salah satu atau kedua kategori, setiap temuan pada openIMIS diberi kualifikasi bahwa prediksi model pada data \emph{benchmark} tidak lebih baik daripada pola posisi umum, dan hasil pemilahan peran posisi (Subbab~\ref{subsec:sensitivitas}) menjadi acuan utama penafsiran. Gambar dengan skor terbaik dan terburuk pada setiap metrik diperiksa secara visual untuk mengidentifikasi pola kegagalan. Perbandingan dengan angka penelitian lain (mis.\ UIGaze dan UMSI pada UEyes) diperlakukan sebagai indikatif dan hanya dilakukan setelah kesebandingan protokol evaluasi diperiksa.
+
+\subsection{Hipotesis, Satuan Analisis, dan Ukuran}
+\label{subsec:hipotesis}
+
+Hipotesis, ukuran, dan prosedur uji ditetapkan sebelum model dijalankan pada \emph{screenshot} openIMIS. Hipotesis bersifat dua arah karena penelitian tidak memiliki dasar untuk memprediksi arah selisih:
+\begin{itemize}
+  \item \textbf{H\textsubscript{0}:} elemen informasi utama tidak berbeda menonjolnya dalam peta atensi visual prediktif dibandingkan elemen tidak berlabel pada layar yang sama.
+  \item \textbf{H\textsubscript{1}:} elemen informasi utama berbeda menonjolnya (lebih menonjol atau kurang menonjol).
+\end{itemize}
+
+Taraf signifikansi ditetapkan $\alpha = 0{,}05$ (dua sisi) sebelum analisis dijalankan. Nilai-p dilaporkan secara eksak, tidak hanya sebagai signifikan atau tidak signifikan.
+
+Satuan analisis adalah elemen berlabel, yang bersarang dalam layar dan alur tugas. Karena elemen pada layar yang sama tidak independen, uji inferensial dilakukan satu kali secara gabungan atas seluruh layar, dengan pengacakan label dibatasi di dalam layar yang sama (Subbab~\ref{subsec:permutasi}). Hasil per layar dilaporkan secara deskriptif tanpa nilai-p, karena uji terpisah per layar memiliki daya yang sangat rendah dan menimbulkan masalah perbandingan berganda. Ukuran utama adalah persentil $P_e$ terhadap pembanding B; ukuran pendukung adalah persentil terhadap pembanding A.
+
+\subsection{Uji Permutasi}
+\label{subsec:permutasi}
+
+Statistik uji adalah rerata persentil seluruh elemen berlabel:
+\begin{equation}
+  T = \frac{1}{n}\sum_{e=1}^{n} P_e
+  \label{eq:statistik-t}
+\end{equation}
+dengan $n$ jumlah elemen berlabel. Distribusi di bawah H\textsubscript{0} dibangun dengan mengacak ulang label ``berlabel'' di antara elemen DOM pada layar yang sama, lintas jenis elemen (jumlah elemen berlabel per layar dipertahankan), sebanyak $K = 10.000$ kali dengan \emph{random seed} tetap yang dicantumkan pada skrip, lalu menghitung ulang $T$ pada setiap pengacakan. Karena himpunan pembanding $C_e$ didefinisikan sebagai elemen tidak berlabel, pada setiap pengacakan $C_e$ dan $P_e$ dihitung ulang sesuai susunan label yang baru, sehingga $T_{\text{obs}}$ dan setiap $T_k$ diperoleh dengan prosedur yang identik. Apabila jumlah susunan label yang mungkin tidak melebihi 10.000, seluruh susunan didaftar sehingga nilai-p bersifat eksak, yaitu proporsi susunan (termasuk susunan amatan) yang sama atau lebih ekstrem tanpa penambahan satu. Nilai-p dua sisi dihitung sebagai:
+\begin{equation}
+  p = \frac{1 + \left|\{k : |T_k - 50| \geq |T_{\text{obs}} - 50|\}\right|}{K+1}
+  \label{eq:nilai-p}
+\end{equation}
+
+Penambahan satu pada pembilang dan penyebut dilakukan agar nilai-p tidak pernah bernilai nol ketika permutasi diambil secara acak \citep{phipson2010permutation}. Perbandingan $|T_k - 50| \geq |T_{\text{obs}} - 50|$ dilakukan dengan toleransi numerik kecil, sehingga susunan yang secara matematis sama ekstremnya dengan susunan amatan tetap terhitung meskipun berbeda akibat pembulatan bilangan desimal. Apabila pada cara pengacakan nilai-p berada pada rentang 0,045 sampai 0,055, uji diulang dengan $K = 100.000$ untuk mengurangi ketidakpastian akibat pengambilan acak, dan nilai-p dari ulangan tersebut yang dipakai; aturan ini ditetapkan sebelum analisis agar keputusan tidak bergantung pada pilihan \emph{seed}.
+
+Selain $T$ dan $p$, dilaporkan sebaran persentil setiap elemen, karena rerata dapat menyembunyikan pola yang sangat berbeda (semua elemen berada di sekitar persentil 45 berbeda maknanya dengan separuh elemen di persentil 90 dan separuh di persentil 0). Karena $T$ memberi bobot yang sama pada setiap elemen, layar dengan elemen berlabel terbanyak berpengaruh paling besar terhadap $T$. Oleh sebab itu, jumlah elemen berlabel dan nilai $T$ untuk setiap layar turut dilaporkan secara deskriptif, dan kesimpulan gabungan diberi kualifikasi apabila arah hasil tidak konsisten antarlayar. Rumus $T$ tidak diubah setelah data dilihat.
+
+\textbf{Pemeriksaan kelayakan uji.} Uji permutasi hanya dapat menghasilkan nilai-p pada kelipatan tertentu yang ditentukan oleh jumlah susunan label yang mungkin. Untuk kelompok pengacakan $g$ (layar pada analisis utama; layar dan jenis pada analisis sensitivitas dengan pembanding A) dengan $n_g$ elemen, $k_g$ di antaranya berlabel, jumlah susunan total adalah:
+\begin{equation}
+  M = \prod_{g} \binom{n_g}{k_g}
+  \label{eq:susunan}
+\end{equation}
+
+Kelompok yang hanya berisi elemen berlabel atau hanya berisi elemen tidak berlabel memiliki satu susunan dan tidak menyumbang informasi pada distribusi nol; kelompok yang memuat keduanya disebut kelompok informatif. Bila $M$ kecil, nilai-p terkecil yang dapat dicapai, yaitu nilai-p apabila seluruh elemen berlabel menempati peringkat tertinggi pada kelompoknya, dapat melebihi $\alpha$, sehingga uji tidak mungkin menghasilkan kesimpulan signifikan berapa pun besar efeknya (mis.\ tiga kelompok yang masing-masing berisi tiga elemen dengan satu elemen berlabel menghasilkan $M = 27$ dan nilai-p minimum dua sisi $2/27 \approx 0{,}074$). Hanya terdapat dua susunan yang paling ekstrem, yaitu seluruh elemen berlabel menempati peringkat tertinggi pada setiap kelompok ($T = 100$) atau peringkat terendah ($T = 0$), sehingga nilai-p minimum yang dapat dicapai adalah:
+\begin{equation}
+  p_{\min} =
+  \begin{cases}
+    \dfrac{2}{M}, & M \leq 10.000 \text{ (enumerasi penuh)} \\[2mm]
+    \dfrac{1}{K+1}, & M > 10.000 \text{ (pengacakan sebanyak } K\text{)}
+  \end{cases}
+  \label{eq:pmin}
+\end{equation}
+
+Karena itu, setelah pelabelan dan ekstraksi kotak DOM selesai dan sebelum skor \emph{saliency} dihitung, dilaporkan (a)~jumlah kelompok informatif, (b)~nilai $M$, dan (c)~nilai $p_{\min}$. Pemeriksaan ini hanya memakai data label dan DOM sehingga tidak dipengaruhi hasil. Untuk menjaga hal tersebut, peta atensi openIMIS tidak dibuka, divisualisasikan, atau diolah menjadi skor sebelum laporan kelayakan uji selesai dan mode analisis ditetapkan. Pemeriksaan ini dilakukan untuk analisis utama dan analisis sensitivitas. Pada tahap yang sama ditentukan elemen berlabel yang dikeluarkan dari analisis pembanding A karena tidak memiliki pembanding sejenis, beserta penerapan penggabungan jenis bila jumlahnya melebihi ambang (Subbab~\ref{subsec:skor}). Kelompok yang seluruh anggotanya berlabel tidak disertakan dalam perhitungan $T$.
+
+Uji inferensial dijalankan hanya bila kedua syarat berikut terpenuhi pada analisis utama: (1)~$p_{\min}$ tidak melebihi $\alpha$; dan (2)~jumlah elemen berlabel sekurang-kurangnya 30 yang tersebar pada sekurang-kurangnya tiga layar. Bila salah satu syarat tidak terpenuhi, hasil dilaporkan secara deskriptif per elemen dan per layar tanpa kesimpulan inferensial. Mode analisis yang ditetapkan pada analisis utama berlaku pula bagi analisis pada Subbab~\ref{subsec:sensitivitas}. Analisis sensitivitas dengan pembanding A, yang berfungsi sebagai pemeriksaan arah, cukup memenuhi syarat (1) pada kelompok pengacakannya sendiri; bila jumlah elemennya berkurang akibat pengeluaran elemen tanpa pembanding sejenis, penurunan daya uji tersebut dinyatakan sebagai keterbatasan, dan bila syarat (1) tidak terpenuhi, analisis A dilaporkan secara deskriptif. Analisis pemilahan peran posisi memakai label dan kelompok pengacakan yang sama dengan analisis utama sehingga kelayakannya identik.
+
+Ambang syarat (2) diusulkan berdasarkan simulasi daya uji permutasi pada struktur yang menyerupai layar Family/Group, yang menunjukkan daya sekitar 0,65 pada 27 elemen berlabel dan sekitar 0,87 pada 36 elemen untuk efek sedang-besar (rerata persentil sekitar 69); daya jauh lebih rendah untuk efek kecil, sehingga hasil tidak signifikan tidak diartikan sebagai ketiadaan efek. Tidak ditemukan bukti perbedaan tidak sama dengan bukti kesetaraan, terutama pada sampel kecil.
+% CATATAN: ambang syarat (2) usulan, menunggu persetujuan pembimbing.
+% CATATAN [CEK]: simulasi daya uji perlu dijalankan ulang dengan rancangan terbaru
+% (pembanding B, pengacakan per layar, pembanding dihitung ulang per permutasi).
+
+\subsection{Analisis Sensitivitas dan Kualitatif}
+\label{subsec:sensitivitas}
+
+Subbab ini memuat tiga pemeriksaan tambahan atas hasil uji utama (Subbab~\ref{subsec:permutasi}), diikuti aturan interpretasi.
+
+\textbf{Analisis sensitivitas pembanding.} Analisis sensitivitas dilakukan dengan mengulang seluruh analisis menggunakan pembanding A, dengan prosedur yang sama seperti Subbab~\ref{subsec:permutasi} (pembanding dihitung ulang pada setiap pengacakan, uji gabungan, dan pemeriksaan kelayakan uji). Karena pembanding A hanya memuat elemen sejenis, pengacakan label pada analisis ini dibatasi di dalam kelompok layar dan jenis yang sama, dan elemen tanpa pembanding sejenis dikeluarkan (Subbab~\ref{subsec:skor}). Apabila analisis utama (pembanding B) menghasilkan perbedaan signifikan, ketahanan kesimpulan tersebut terhadap penyamaan jenis elemen diklasifikasikan berdasarkan hasil analisis sensitivitas (pembanding A):
+\begin{enumerate}
+  \item \textbf{bertahan}, apabila analisis A juga signifikan dengan arah yang sama; kesimpulan utama tidak dijelaskan oleh jenis atau ukuran elemen;
+  \item \textbf{melemah}, apabila analisis A tidak signifikan tetapi $T_A$ berada pada sisi yang sama terhadap 50; sebagian hasil mungkin berkaitan dengan jenis atau ukuran elemen;
+  \item \textbf{tidak bertahan}, apabila $T_A$ berada pada sisi yang berlawanan terhadap 50; kesimpulan utama kemungkinan besar terdorong oleh jenis atau ukuran elemen, dan hal ini dilaporkan sebagai temuan, bukan sebagai ketiadaan temuan.
+\end{enumerate}
+Apabila analisis utama tidak signifikan, klasifikasi ini tidak digunakan dan hasil analisis A dilaporkan sebagai informasi pelengkap. Apabila analisis A berada pada mode deskriptif, yang dilaporkan hanya posisi $T_A$ terhadap 50.
+
+\textbf{Pemilahan peran posisi.} Letak elemen merupakan bagian dari keputusan desain yang juga memengaruhi atensi: elemen berlabel cenderung ditempatkan di bagian atas dan kiri layar, sedangkan fiksasi pada antarmuka dilaporkan terkonsentrasi di kuadran kiri atas, bukan di tengah \citep{jiang2023ueyes}. Untuk memilah apakah menonjolnya elemen berlabel terutama berasal dari tata letak atau juga dari tampilan visual elemen, analisis utama Subbab~\ref{subsec:permutasi} (skor, persentil terhadap pembanding B, dan uji permutasi) dijalankan ulang dengan \textbf{peta posisi rata-rata manusia} sebagai pengganti peta model pada \emph{screenshot} openIMIS yang sama, dengan kotak, pembanding, dan prosedur pengacakan yang sama. Peta ini adalah rerata seluruh peta acuan UEyes kategori desktop dan web (Subbab~\ref{subsec:benchmark}), diubah ke ukuran \emph{screenshot} openIMIS, sehingga hanya memuat pola posisi umum dan tidak memanfaatkan isi layar; \emph{leave-one-out} tidak diperlukan karena \emph{screenshot} openIMIS bukan bagian dari UEyes. Nilai $T$ dan nilai-p dari peta posisi dilaporkan berdampingan dengan hasil peta model, dan ditafsirkan sebagai berikut:
+\begin{enumerate}
+  \item apabila peta posisi saja menghasilkan perbedaan signifikan ($p \leq \alpha$) dengan arah yang sama dengan peta model, menonjolnya elemen berlabel ditafsirkan dapat dijelaskan oleh tata letak;
+  \item apabila peta model menghasilkan perbedaan signifikan sedangkan peta posisi tidak, terdapat indikasi bahwa tampilan visual elemen (mis.\ kontras, ukuran, atau penekanan) turut berperan di luar pola posisi umum;
+  \item apabila peta posisi menunjukkan elemen berlabel lebih menonjol secara signifikan, tetapi peta model menunjukkan elemen tersebut tidak berbeda atau kurang menonjol, elemen ditafsirkan berada pada letak yang strategis tetapi kalah menonjol secara visual, dan menjadi bahan utama kandidat rekomendasi.
+\end{enumerate}
+
+Selain penafsiran pada tingkat gabungan, setiap elemen berlabel dengan persentil terhadap peta posisi $P_{\text{posisi}} \geq 75$ dan persentil terhadap peta model $P_{\text{model}} \leq 25$ ditandai secara deskriptif sebagai elemen ``posisi strategis, tampilan kalah'', karena letaknya termasuk seperempat teratas menurut pola posisi umum tetapi tampilannya termasuk seperempat terbawah menurut model. Penandaan ini berlaku pada kedua mode analisis dan menjadi masukan bagi telaah kualitatif.
+
+Pemilahan ini tidak dimaksudkan untuk membatalkan temuan, karena tata letak merupakan bagian dari desain antarmuka, melainkan untuk mengarahkan kandidat rekomendasi pada penempatan elemen atau pada gaya visualnya. Peta posisi berasal dari antarmuka umum, bukan openIMIS, dan perubahan ukuran dapat mendistorsi pola bila rasio aspek berbeda; keduanya dinyatakan sebagai keterbatasan.
+
+\textbf{Telaah kualitatif.} Elemen yang ditelaah adalah elemen berlabel dengan persentil ekstrem terhadap pembanding B ($P_e \leq 25$ sebagai kandidat masalah desain dan $P_e \geq 75$ sebagai contoh pembanding yang menonjol), ditambah elemen bertanda ``posisi strategis, tampilan kalah''. Setiap elemen ditelaah dengan lembar telaah yang atributnya ditetapkan sebelum analisis, yaitu: (1)~luas kotak relatif terhadap median pembanding; (2)~posisi, berupa kuadran layar dan $P_{\text{posisi}}$; (3)~letak area paling panas di dalam kotak (pada teks label, pada isian, atau tidak ada); (4)~penekanan visual yang tampak (mis.\ huruf tebal, warna, tanda bintang, ikon); (5)~pesaing atensi, yaitu satu sampai dua elemen tidak berlabel dengan skor tertinggi pada layar yang sama; (6)~hipotesis penjelasan; dan (7)~arah kandidat rekomendasi, yaitu penempatan atau gaya visual, mengacu pada pemilahan peran posisi. Atribut (1), (2), dan (5) diperoleh dari keluaran skrip, atribut (3) dan (4) dari pengamatan visual, sedangkan atribut (6) dan (7) merupakan interpretasi peneliti. Seluruh isi lembar telaah dinyatakan sebagai hipotesis untuk pengujian lanjutan dengan pengguna, bukan sebagai kesimpulan.
+% CATATAN: opsional, ditunda: pengukuran kontras label terhadap latar dengan rasio
+% kontras luminans WCAG.
+
+\textbf{Aturan interpretasi.} Interpretasi hasil selalu menimbang empat hal: besar selisih, ketidakpastian (nilai-p), sebaran antarelemen, dan konsistensi arah antarlayar, serta dibatasi pada atensi visual prediktif. Kekuatan setiap temuan dinyatakan dalam tiga tingkat: (1)~\textbf{kuat}, bila analisis inferensial menghasilkan perbedaan signifikan dengan status bertahan; (2)~\textbf{terbatas}, bila signifikan dengan status melemah atau tidak bertahan, sehingga perbedaan sebagian dapat berkaitan dengan jenis atau ukuran elemen; dan (3)~\textbf{indikatif}, bila analisis berada pada mode deskriptif atau tidak signifikan. Temuan dirumuskan dengan frasa ``menurut prediksi model'' atau ``atensi visual prediktif''; frasa yang menyatakan perilaku pengguna, seperti ``pengguna melihat'', ``pengguna mengabaikan'', atau ``elemen tidak terbaca'', tidak digunakan. Kualifikasi dari hasil \emph{benchmark} (Subbab~\ref{subsec:benchmark}) diterapkan pada seluruh tingkat.
+
+\textbf{Kandidat rekomendasi.} Kandidat rekomendasi hanya diturunkan dari elemen pada lembar telaah kualitatif yang memiliki $P_e \leq 25$ terhadap pembanding B atau bertanda ``posisi strategis, tampilan kalah''. Setiap kandidat rekomendasi memuat: (a)~elemen dan layarnya; (b)~bukti, yaitu $P_{\text{model}}$, $P_{\text{posisi}}$, dan pesaing atensi; (c)~arah perbaikan, yaitu penempatan atau gaya visual; dan (d)~pernyataan bahwa rekomendasi perlu diuji dengan pengguna. Elemen yang memenuhi kriteria K3 (menentukan status atau keputusan; Tabel~\ref{tab:kriteria}) diprioritaskan, karena kurang menonjolnya elemen penentu keputusan dipandang paling berisiko bagi pelaksanaan proses administratif.
+
+% =====================================================================
+\section{Ancaman Validitas dan Keterbatasan}
+\label{sec:validitas}
+
+\begin{longtable}{>{\raggedright\arraybackslash}p{0.21\textwidth}>{\raggedright\arraybackslash}p{0.33\textwidth}>{\raggedright\arraybackslash}p{0.36\textwidth}}
+\caption{Ancaman validitas dan mitigasi}
+\label{tab:validitas}\\
+\hline
+\textbf{Ancaman} & \textbf{Penjelasan} & \textbf{Mitigasi} \\
+\hline
+\endfirsthead
+\multicolumn{3}{l}{\emph{Tabel~\ref{tab:validitas} (lanjutan)}}\\
+\hline
+\textbf{Ancaman} & \textbf{Penjelasan} & \textbf{Mitigasi} \\
+\hline
+\endhead
+\hline
+\endfoot
+Label bersumber dari penekanan sumber, bukan kebutuhan informasi pengguna & Label mencerminkan apa yang dijelaskan sumber, bukan apa yang berisiko jika terlewat & Kriteria tertulis, dua sumber berbeda, dinyatakan eksploratif \\
+\hline
+Pelabel tunggal dan tanpa validasi pakar & Subjektivitas tidak hilang & Buku kode, pengodean ulang, dan kappa \\
+\hline
+Perbedaan versi antarmuka & Sumber 2020, video 2026, dan server demo saat ini bisa berbeda & Pemetaan berdasarkan fungsi, log versi, status pemetaan per elemen \\
+\hline
+Model \emph{bottom-up} dan acuan \emph{free-viewing} & Hasil tidak mewakili atensi pengguna yang bertugas & Klaim dibatasi pada atensi visual prediktif \\
+\hline
+Resolusi efektif rendah & Elemen kecil diwakili sedikit piksel pada ruang model & Dicatat sebagai keterbatasan; elemen sangat kecil ditandai \\
+\hline
+Jumlah elemen berlabel sedikit atau susunan label terbatas & Daya uji rendah; nilai-p minimum yang dapat dicapai bisa melebihi $\alpha$ & Pemeriksaan kelayakan uji sebelum skor dihitung (nilai-p minimum, Persamaan~\eqref{eq:susunan} dan~\eqref{eq:pmin}) dan ambang minimum (30 elemen pada tiga layar); pelaporan deskriptif bila salah satu syarat tidak terpenuhi \\
+\hline
+Dominasi satu layar & Nilai $T$ dapat didominasi oleh layar yang memiliki elemen berlabel paling banyak, sehingga tidak mewakili seluruh layar secara seimbang & $T$ dan jumlah elemen berlabel dilaporkan per layar; kesimpulan gabungan diberi kualifikasi bila arah tidak konsisten antarlayar \\
+\hline
+Ukuran dan jenis elemen & Pembanding utama (B) mencakup semua jenis elemen; jenis elemen berkaitan dengan ukuran kotak, dan skor rerata dalam kotak peka terhadap ukuran, sehingga persentil dapat sebagian mencerminkan ukuran atau jenis elemen & Luas kotak elemen berlabel dan pembanding dilaporkan per layar; analisis sensitivitas dengan pembanding A (jenis sama); perbedaan arah antara kedua pembanding ditafsirkan sebagai indikasi peran jenis atau ukuran elemen \\
+\hline
+Peran posisi (tata letak) & Elemen berlabel terkonsentrasi di bagian atas dan kiri, sejalan dengan bias kiri-atas pada fiksasi antarmuka \citep{jiang2023ueyes}; tanpa pemilahan, tidak jelas apakah menonjolnya elemen berasal dari tata letak atau dari tampilan visual & Tidak dikendalikan secara statistik karena tata letak merupakan bagian dari desain; perannya dipilah dengan menjalankan ulang analisis utama, termasuk uji permutasi, memakai peta posisi rata-rata manusia dari UEyes (Subbab~\ref{subsec:sensitivitas}) \\
+\hline
+Definisi elemen mencakup label dan isian & Skor elemen mencampur atensi pada teks label (cenderung lebih menonjol) dan kotak isian kosong (cenderung redup), sehingga menonjolnya label tidak dapat dipisahkan dari isiannya & Dinyatakan sebagai keterbatasan; definisi dipertahankan karena label dan isian dipersepsi sebagai satu kesatuan elemen formulir (Subbab~\ref{subsec:ekstraksi-dom}) \\
+\hline
+Cakupan terbatas & \emph{Viewport} awal, kolom formulir, server demo & Dinyatakan sebagai batasan \\
+\hline
+Tidak ada validasi kuantitatif domain-spesifik & Akurasi model hanya diukur pada UEyes & Dinyatakan eksplisit sebagai keterbatasan \\
+\end{longtable}
+% CATATAN: tiga usulan terkait dominasi area navigasi openIMIS (ukur porsi atensi,
+% sensitivitas masking, pengaman 8-bit) ditahan; lihat Pertanyaan 6 bahan bimbingan.

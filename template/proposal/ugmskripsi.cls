@@ -32,7 +32,7 @@
 \ProcessOptions
 \LoadClass[a4paper,12pt]{report}
 \RequirePackage{natbib}
-\bibliographystyle{plainnat}
+\bibliographystyle{elsarticle-harv}
 \RequirePackage{nomencl}%
 \renewcommand{\nomname}{\nomenclaturename}%
 \makeglossary%
