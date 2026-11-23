@@ -4,10 +4,9 @@
 \section{Deskripsi Umum}
 \label{sec:deskripsi-umum}
 
-Penelitian ini merupakan skripsi ilmiah akademik dengan target penelitian berupa analisis model prediksi atensi visual pra-latih pada objek studi antarmuka openIMIS, disertai pengembangan aplikasi web sederhana dengan satu fitur inti. Penelitian tidak melibatkan pelatihan maupun \emph{fine-tuning} model. Seluruh komputasi dilakukan pada laptop pribadi dengan GPU NVIDIA RTX 3060 Laptop (VRAM 6~GB), sedangkan data antarmuka diambil dari server demo resmi openIMIS (\texttt{demo.\allowbreak openimis.\allowbreak org}).
-% CATATAN: keberadaan aplikasi web menunggu jawaban Pak Lukman (Pertanyaan 1 bahan bimbingan).
+Penelitian ini merupakan skripsi ilmiah akademik dengan target penelitian berupa analisis model prediksi atensi visual pra-latih pada objek studi antarmuka openIMIS. Penelitian tidak melibatkan pelatihan maupun \emph{fine-tuning} model. Seluruh komputasi dilakukan pada laptop pribadi dengan GPU NVIDIA RTX 3060 Laptop (VRAM 6~GB), sedangkan data antarmuka diambil dari server demo resmi openIMIS (\texttt{demo.\allowbreak openimis.\allowbreak org}).
 
-Penelitian terdiri atas sembilan tahap yang digambarkan pada Gambar~\ref{fig:bagan-alir}. Penomoran tahap menunjukkan kelompok kegiatan, bukan urutan ketat: pengambilan \emph{screenshot} dan kotak elemen DOM untuk layar alur pilot (Tahap~5) dilakukan sebelum pilot pelabelan (Tahap~2), karena daftar elemen DOM menjadi satuan pelabelan. Tahap \emph{benchmark} pada UEyes berjalan paralel dengan tahap pelabelan dan pengambilan data openIMIS, dan hasilnya diperlukan sebelum hasil analisis pada openIMIS ditafsirkan.
+Penelitian terdiri atas delapan tahap yang digambarkan pada Gambar~\ref{fig:bagan-alir}. Penomoran tahap menunjukkan kelompok kegiatan, bukan urutan ketat: pengambilan \emph{screenshot} dan kotak elemen DOM untuk layar alur pilot (Tahap~5) dilakukan sebelum pilot pelabelan (Tahap~2), karena daftar elemen DOM menjadi satuan pelabelan. Tahap \emph{benchmark} pada UEyes berjalan paralel dengan tahap pelabelan dan pengambilan data openIMIS, dan hasilnya diperlukan sebelum hasil analisis pada openIMIS ditafsirkan.
 
 \begin{figure}[H]
   \centering
@@ -16,7 +15,7 @@ Penelitian terdiri atas sembilan tahap yang digambarkan pada Gambar~\ref{fig:bag
   \label{fig:bagan-alir}
 \end{figure}
 
-Gambar 3.1 menunjukkan urutan dan ketergantungan antartahap. Secara garis besar, tahapan terbagi menjadi empat kelompok: penyiapan data dan pelabelan (Tahap 1, 2, 3, dan 5), pengukuran kredibilitas model pada UEyes (Tahap 4), prediksi dan analisis pada antarmuka openIMIS (Tahap 6 dan 7), serta penyusunan luaran (Tahap 8 dan 9). Tahap 7 dipecah menjadi tiga langkah berurutan, yaitu pemeriksaan kelayakan uji, perhitungan skor, dan uji permutasi beserta analisis lanjutannya, karena mode analisis harus ditetapkan sebelum skor dihitung. Keluaran setiap tahap beserta indikator capaiannya yang terukur dirinci pada Tabel 3.1, dan indikator tersebut menjadi acuan untuk menilai keberhasilan setiap tahap.
+Gambar 3.1 menunjukkan urutan dan ketergantungan antartahap. Secara garis besar, tahapan terbagi menjadi empat kelompok: penyiapan data dan pelabelan (Tahap 1, 2, 3, dan 5), pengukuran kredibilitas model pada UEyes (Tahap 4), prediksi dan analisis pada antarmuka openIMIS (Tahap 6 dan 7), serta perumusan temuan (Tahap 8). Tahap 7 dipecah menjadi tiga langkah berurutan, yaitu pemeriksaan kelayakan uji, perhitungan skor, dan uji permutasi beserta analisis lanjutannya, karena mode analisis harus ditetapkan sebelum skor dihitung. Keluaran setiap tahap beserta indikator capaiannya yang terukur dirinci pada Tabel 3.1, dan indikator tersebut menjadi acuan untuk menilai keberhasilan setiap tahap.
 
 \begin{longtable}{>{\raggedright\arraybackslash}p{0.20\textwidth}>{\raggedright\arraybackslash}p{0.24\textwidth}>{\raggedright\arraybackslash}p{0.46\textwidth}}
 \caption{Tahapan penelitian, keluaran, dan indikator capaian}
@@ -46,9 +45,7 @@ Gambar 3.1 menunjukkan urutan dan ketergantungan antartahap. Secara garis besar,
 \hline
 7. Kelayakan uji, skor, dan analisis & Laporan kelayakan uji, skor, persentil, nilai-p permutasi, hasil analisis sensitivitas (melalui skrip analisis) & Laporan kelayakan uji (jumlah kelompok informatif, total susunan, nilai-p minimum) disusun sebelum skor dihitung; persentil seluruh elemen berlabel dan sebaran per elemen dilaporkan, beserta jumlah elemen berlabel dan $T$ per layar; nilai-p eksak dilaporkan terhadap $\alpha = 0{,}05$ bila syarat kelayakan terpenuhi; luas kotak elemen berlabel dan pembanding dilaporkan per layar (median dan rasio); hasil analisis sensitivitas dengan pembanding A dan status ketahanan kesimpulan dilaporkan; hasil pemilahan peran posisi dan lembar telaah kualitatif untuk seluruh elemen terpilih tersedia \\
 \hline
-8. Aplikasi web & Aplikasi web unggah \emph{screenshot} dengan tampilan peta atensi & Peta atensi dari aplikasi sama dengan peta dari skrip inferensi pada seluruh \emph{screenshot} uji (toleransi numerik \textbf{[ditetapkan]}) \\
-\hline
-9. Perumusan temuan & Temuan, kandidat rekomendasi, keterbatasan & Setiap temuan disertai tingkat kekuatan klaim (kuat, terbatas, atau indikatif), ukuran ketidakpastian, dan keterbatasannya; tidak ada klaim tentang perilaku pengguna; setiap kandidat rekomendasi memuat elemen, bukti, arah perbaikan, dan pernyataan perlu diuji dengan pengguna, dengan elemen berkriteria K3 diprioritaskan \\
+8. Perumusan temuan & Temuan, kandidat rekomendasi, keterbatasan & Setiap temuan disertai tingkat kekuatan klaim (kuat, terbatas, atau indikatif), ukuran ketidakpastian, dan keterbatasannya; tidak ada klaim tentang perilaku pengguna; setiap kandidat rekomendasi memuat elemen, bukti, arah perbaikan, dan pernyataan perlu diuji dengan pengguna, dengan elemen berkriteria K3 diprioritaskan \\
 \end{longtable}
 
 % =====================================================================
@@ -228,7 +225,7 @@ Skrip pada tahap ini hanya menangkap elemen kolom formulir. Jenis elemen lain (t
 \subsection{Perhitungan Skor \emph{Saliency} per Elemen}
 \label{subsec:skor}
 
-Perhitungan pada subbab ini dikerjakan oleh skrip analisis (\emph{notebook}) yang menerima peta prediksi dan berkas kotak elemen. Skrip ini merupakan instrumen penelitian dan tidak diintegrasikan ke dalam aplikasi web pada Subbab~\ref{subsec:aplikasi}. Peta prediksi $S$ untuk setiap \emph{screenshot} distandarkan menjadi $S_z$, dengan $\mu_S$ dan $\sigma_S$ masing-masing rerata dan simpangan baku seluruh piksel pada peta tersebut:
+Perhitungan pada subbab ini dikerjakan oleh skrip analisis (\emph{notebook}) yang menerima peta prediksi dan berkas kotak elemen. Skrip ini merupakan instrumen penelitian. Peta prediksi $S$ untuk setiap \emph{screenshot} distandarkan menjadi $S_z$, dengan $\mu_S$ dan $\sigma_S$ masing-masing rerata dan simpangan baku seluruh piksel pada peta tersebut:
 \begin{equation}
   S_z(x,y) = \frac{S(x,y) - \mu_S}{\sigma_S}
   \label{eq:standardisasi}
@@ -252,12 +249,6 @@ Nilai $P_e = 50$ berarti elemen $e$ tidak berbeda dari pembanding. Dua himpunan 
 Pada pembanding B, himpunan pembanding hanya kosong apabila seluruh elemen pada suatu layar berlabel; layar seperti ini tidak disertakan dalam analisis utama dan dilaporkan secara deskriptif. Pada analisis sensitivitas dengan pembanding A, elemen berlabel yang tidak memiliki pembanding sejenis ($|C_e| = 0$), yaitu elemen pada kelompok layar dan jenis yang seluruh anggotanya berlabel, dikeluarkan dari analisis tersebut. Label elemen tersebut tidak dapat berpindah pada pengacakan (Subbab~\ref{subsec:permutasi}), sehingga persentilnya bernilai tetap pada setiap permutasi dan akan menggeser pusat distribusi nol $T$ dari 50; selain itu, menghitungnya terhadap pembanding lain akan mencampur dua definisi pembanding dalam satu statistik. Elemen tersebut tetap tercakup dalam analisis utama dengan pembanding B. Apabila elemen yang dikeluarkan dari analisis pembanding A melebihi 20\% dari seluruh elemen berlabel, jenis elemen digabung menurut hierarki jenis yang ditetapkan sebelum pelabelan (mis.\ kolom teks dan \emph{dropdown} digabung menjadi ``kolom isian'') \textbf{[hierarki ditetapkan sebelum pelabelan]}. Keputusan ini diambil pada pemeriksaan kelayakan uji, yang hanya memakai data label dan DOM. Elemen dengan pembanding sedikit tidak dikeluarkan, tetapi $|C_e|$ pada kedua pembanding dilaporkan untuk setiap elemen. Ambang 20\% merupakan pertimbangan peneliti.
 
 Pembanding seluruhnya berasal dari kotak DOM; kotak yang ditempatkan secara acak tidak digunakan karena sering jatuh pada area kosong yang cenderung bernilai rendah dan akan membiaskan hasil ke arah elemen berlabel.
-
-\subsection{Rancangan Aplikasi Web}
-\label{subsec:aplikasi}
-
-% CATATAN: subbab ini bergantung pada jawaban Pak Lukman soal perlu tidaknya aplikasi web.
-Aplikasi web memiliki satu fitur inti. Masukan berupa \emph{screenshot} openIMIS yang diunggah pengguna; keluaran berupa peta atensi yang ditumpangkan pada \emph{screenshot} tersebut. Aplikasi memakai model dan prapemrosesan yang sama dengan Subbab~\ref{subsec:model}, dan teknologi implementasinya \textbf{[dipilih saat implementasi]}. Aplikasi tidak menghitung skor per elemen dan tidak menjalankan uji statistik; kedua hal tersebut dikerjakan oleh skrip analisis pada Subbab~\ref{subsec:skor} sebagai instrumen penelitian. Kesamaan peta keluaran aplikasi dengan peta keluaran skrip inferensi menjadi indikator capaian (Tabel~\ref{tab:tahapan}). Apabila waktu tidak memadai, ruang lingkup aplikasi tidak diperluas dan tidak mengubah rancangan analisis.
 
 % =====================================================================
 \section{Rancangan Pengujian dan Analisis}

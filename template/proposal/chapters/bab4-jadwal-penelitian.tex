@@ -1,43 +1,100 @@
+% =====================================================================
+% BAB 4 JADWAL PENELITIAN
+% Membutuhkan di preambul: \usepackage[table]{xcolor}, \usepackage{multirow},
+% \usepackage{array}, \usepackage{float}.
+% =====================================================================
+\definecolor{ganttisi}{gray}{0.45}
+\definecolor{ganttcadangan}{gray}{0.82}
+\newcommand{\gantt}{\cellcolor{ganttisi}}
+\newcommand{\ganttcadangan}{\cellcolor{ganttcadangan}}
+
 \chapter{JADWAL PENELITIAN}
+\label{chap:jadwal}
 
 \section{Jadwal Penelitian}
+\label{sec:jadwal}
 
-% TODO: Sesuaikan jadwal dengan tahapan penelitian Anda.
-% Gantt Chart berbasis bulan.
+Jadwal penelitian disusun berdasarkan tahapan pada Tabel~\ref{tab:tahapan} dan ketergantungan antartahap pada Gambar~\ref{fig:bagan-alir}, dengan acuan jadwal ujian proposal Program Studi S1 Ilmu Komputer periode Desember 2026 (batas pendaftaran 7 Desember 2026 dan pelaksanaan ujian 14--18 Desember 2026) serta target ujian skripsi pada Juni 2027. Jadwal disajikan dalam bentuk \emph{Gantt chart} berbasis bulan yang dibagi per minggu, yaitu Tabel~\ref{tab:jadwal-1} untuk November 2026 sampai Februari 2027 dan Tabel~\ref{tab:jadwal-2} untuk Maret sampai Juli 2027. Nomor pada nama kegiatan merujuk pada nomor tahap di Tabel~\ref{tab:tahapan}. Tahap 4a (inferensi dan perhitungan metrik pada benchmark UEyes) telah dilaksanakan sebelum periode jadwal ini (Gambar~\ref{fig:bagan-alir}), sehingga tidak dicantumkan.
 
-Penelitian ini direncanakan berlangsung selama beberapa bulan dengan tahapan yang telah dijelaskan pada Bab III. Jadwal pelaksanaan disusun menggunakan Gantt Chart berbasis bulan sebagai berikut:
+Urutan kegiatan mengikuti empat ketentuan pada Bab 3: (1)~screenshot dan kotak elemen DOM untuk layar alur pilot diambil sebelum sesi pertama pilot pelabelan (Subbab~\ref{subsec:pelabelan}); (2)~sesi kedua pengodean ulang pada pilot dilaksanakan sekurang-kurangnya dua minggu setelah sesi pertama; (3)~skrip analisis disiapkan dan divalidasi selama jeda tersebut dan selama pelabelan penuh, sebelum dipakai pada data openIMIS; dan (4)~pemeriksaan kelayakan uji (Tahap 7a) diselesaikan sebelum peta atensi openIMIS dibuka dan diolah menjadi skor (Subbab~\ref{subsec:permutasi}).
+
+% CATATAN: kalimat cakupan dua alur adalah usulan, menunggu persetujuan pembimbing.
+Cadangan waktu dua minggu disediakan untuk satu putaran pengodean ulang apabila evaluasi pilot menghasilkan keputusan \emph{lanjut dengan penyesuaian} (Tabel~\ref{tab:evaluasi-pilot}). Apabila cadangan tersebut terpakai, pelabelan penuh dimulai paling lambat dua minggu kemudian, dan cakupannya disesuaikan ke batas minimum dua alur tugas (Subbab~\ref{subsec:data-openimis}) agar pemeriksaan kelayakan uji tetap dapat diselesaikan pada akhir Maret 2027. Jadwal ujian skripsi tahun 2027 belum diterbitkan, sehingga posisi pendaftaran dan ujian skripsi pada Tabel~\ref{tab:jadwal-2} mengikuti pola jadwal prodi periode Juni 2026, yaitu batas pendaftaran pada akhir bulan sebelumnya dan ujian pada minggu pertama bulan berjalan; jadwal disesuaikan setelah jadwal resmi diterbitkan.
+
+Pada Tabel~\ref{tab:jadwal-1} dan Tabel~\ref{tab:jadwal-2}, sel berwarna gelap menunjukkan rencana kegiatan dan sel berwarna terang menunjukkan cadangan waktu.
 
 \begin{table}[H]
-\centering
-\caption{Jadwal Penelitian (Gantt Chart)}
-\begin{tabular}{|l|c|c|c|c|c|c|c|c|}
-\hline
-\multirow{2}{*}{\textbf{Kegiatan}} & \multicolumn{8}{c|}{\textbf{Bulan}} \\
-\cline{2-9}
- & \textbf{1} & \textbf{2} & \textbf{3} & \textbf{4} & \textbf{5} & \textbf{6} & \textbf{7} & \textbf{8} \\
-\hline
-Studi Literatur & $\bullet$ & $\bullet$ & & & & & & \\
-\hline
-Analisis Kebutuhan & & $\bullet$ & $\bullet$ & & & & & \\
-\hline
-Perancangan Sistem & & & $\bullet$ & $\bullet$ & & & & \\
-\hline
-Implementasi & & & & $\bullet$ & $\bullet$ & $\bullet$ & & \\
-\hline
-Pengujian & & & & & & $\bullet$ & $\bullet$ & \\
-\hline
-Evaluasi & & & & & & & $\bullet$ & $\bullet$ \\
-\hline
-Penulisan Laporan & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ & $\bullet$ \\
-\hline
-\end{tabular}
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{1.5pt}
+  \renewcommand{\arraystretch}{1.25}
+  \caption{Jadwal penelitian November 2026 sampai Februari 2027}
+  \label{tab:jadwal-1}
+  \begin{tabular}{|>{\raggedright\arraybackslash}p{0.36\textwidth}|*{4}{>{\centering\arraybackslash}p{0.032\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.032\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.032\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.032\textwidth}}|}
+  \hline
+  \multirow{2}{*}{\textbf{Kegiatan}} & \multicolumn{4}{c|}{\textbf{Nov 2026}} & \multicolumn{4}{c|}{\textbf{Des 2026}} & \multicolumn{4}{c|}{\textbf{Jan 2027}} & \multicolumn{4}{c|}{\textbf{Feb 2027}} \\
+  \cline{2-17}
+   & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 \\
+  \hline
+  Finalisasi proposal dan bimbingan &  &  &  & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Simulasi daya uji dengan rancangan terbaru &  &  &  & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Pendaftaran ujian proposal &  &  &  &  & \gantt &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Ujian proposal &  &  &  &  &  &  & \gantt &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Revisi proposal &  &  &  &  &  &  &  & \gantt & \gantt &  &  &  &  &  &  &  \\
+  \hline
+  1. Studi sumber dan kriteria pemilihan layar/alur &  &  &  & \gantt & \gantt & \gantt & \gantt & \gantt &  &  &  &  &  &  &  &  \\
+  \hline
+  4b. Baseline benchmark dan analisis gambar ekstrem &  &  &  &  &  &  &  & \gantt & \gantt & \gantt & \gantt & \gantt &  &  &  &  \\
+  \hline
+  5. Pengambilan screenshot dan kotak elemen DOM &  &  &  &  &  &  &  & \gantt & \gantt & \gantt &  &  &  &  &  &  \\
+  \hline
+  2. Pilot pelabelan dan evaluasi pilot &  &  &  &  &  &  &  &  &  & \gantt & \gantt & \gantt & \gantt & \gantt &  &  \\
+  \hline
+  Cadangan satu putaran pengodean ulang pilot &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \ganttcadangan & \ganttcadangan \\
+  \hline
+  3. Pelabelan penuh &  &  &  &  &  &  &  &  &  &  &  &  &  &  & \gantt & \gantt \\
+  \hline
+  Penyiapan dan validasi skrip analisis &  &  &  &  &  &  &  &  &  &  &  &  & \gantt & \gantt & \gantt & \gantt \\
+  \hline
+  \end{tabular}
 \end{table}
 
-Keterangan:
-\begin{itemize}
-    \item $\bullet$ = Kegiatan dilaksanakan pada bulan tersebut
-    \item Penelitian ini diperkirakan berlangsung selama 8 bulan
-    \item Penulisan laporan dilakukan secara paralel sepanjang penelitian
-\end{itemize}
-
-% TODO: Sesuaikan jumlah bulan dan kegiatan dengan rencana penelitian Anda.
+\begin{table}[H]
+  \centering
+  \footnotesize
+  \setlength{\tabcolsep}{1.5pt}
+  \renewcommand{\arraystretch}{1.25}
+  \caption{Jadwal penelitian Maret sampai Juli 2027}
+  \label{tab:jadwal-2}
+  \begin{tabular}{|>{\raggedright\arraybackslash}p{0.32\textwidth}|*{4}{>{\centering\arraybackslash}p{0.025\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.025\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.025\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.025\textwidth}}|*{4}{>{\centering\arraybackslash}p{0.025\textwidth}}|}
+  \hline
+  \multirow{2}{*}{\textbf{Kegiatan}} & \multicolumn{4}{c|}{\textbf{Mar 2027}} & \multicolumn{4}{c|}{\textbf{Apr 2027}} & \multicolumn{4}{c|}{\textbf{Mei 2027}} & \multicolumn{4}{c|}{\textbf{Jun 2027}} & \multicolumn{4}{c|}{\textbf{Jul 2027}} \\
+  \cline{2-21}
+   & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 & 1 & 2 & 3 & 4 \\
+  \hline
+  3. Pelabelan penuh & \gantt & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Penyiapan dan validasi skrip analisis & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  7a. Pemeriksaan kelayakan uji &  &  &  & \gantt &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  6. Prediksi atensi pada screenshot openIMIS &  &  &  &  & \gantt &  &  &  &  &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  7b--7c. Skor, uji permutasi, analisis sensitivitas, dan telaah kualitatif &  &  &  &  & \gantt & \gantt & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  8. Perumusan temuan, kandidat rekomendasi, dan keterbatasan &  &  &  &  &  &  & \gantt & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Penulisan laporan skripsi & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt &  &  &  &  &  &  &  &  &  &  \\
+  \hline
+  Persetujuan naskah dan pendaftaran ujian skripsi &  &  &  &  &  &  &  &  &  &  & \gantt & \gantt &  &  &  &  &  &  &  &  \\
+  \hline
+  Ujian skripsi &  &  &  &  &  &  &  &  &  &  &  &  & \gantt &  &  &  &  &  &  &  \\
+  \hline
+  Revisi pascaujian dan yudisium &  &  &  &  &  &  &  &  &  &  &  &  &  & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt & \gantt \\
+  \hline
+  \end{tabular}
+\end{table}
